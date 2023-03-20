@@ -4,24 +4,32 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class StackOverFlowParser implements Parser{
-    public static StackOverFlowResult parse(String s)
+public final class StackOverFlowParser extends Parser{
+    private static final Pattern pattern = Pattern.compile("^(https://stackoverflow\\.com/questions/)(\\d*)/*");
+
+    public ParseResult parse(String url)
     {
-        if(!s.contains("stackoverflow") || !s.contains("questions")) return  null;
+        try
+        {
+            Matcher matcher = pattern.matcher(url);
+
+            if(!matcher.find())
+            {
+                return parseNext(url);
+            }
+
+            Matcher tempmatcher = Pattern.compile("/\\d+/").matcher(matcher.group(0));
+            tempmatcher.find();
 
 
-        Matcher matcher = Pattern.compile("(questions/)\\d*").matcher(s);
-        int result;
-
-        if(!matcher.find()) return null;
-
-        try {
-            result = Integer.parseInt(matcher.group(0).substring(matcher.group(0).indexOf("/") + 1));
+            return new StackOverFlowResult(Integer.parseInt(tempmatcher.group(0).substring(1,tempmatcher.group(0).length()-2)));
         }
         catch (Exception e)
         {
-            return null;
+            return parseNext(url);
         }
-        return new StackOverFlowResult(result);
+
     }
+
+
 }

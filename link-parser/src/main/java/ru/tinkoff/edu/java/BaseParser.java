@@ -1,13 +1,14 @@
 package ru.tinkoff.edu.java;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-public final class BaseParser implements Parser{
-    public static ParseResult parse(String s)
+public final class BaseParser extends Parser{
+    private static final  Pattern pattern = Pattern.compile("^(https://)(([\\w-_\\.@#$%=&\\?\\*|])*[/])*([\\w-_\\.@#=$%&\\?\\*])*$");
+
+    public ParseResult parse(String url)
     {
-        String regex = "^(https://)(([\\w-_\\.@#$%&\\?\\*|])*[/])*([\\w-_\\.@#$%&\\?\\*])*$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(s);
+        Matcher matcher = pattern.matcher(url);
+
         if(!matcher.matches()) return null;
-        return GitHubParser.parse(s);
+        return parseNext(url);
     }
 }
