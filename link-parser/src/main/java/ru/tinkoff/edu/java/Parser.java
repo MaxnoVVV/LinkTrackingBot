@@ -5,12 +5,10 @@ public abstract class Parser {
 
     public abstract ParseResult parse(String url);
 
-    public static Parser link(Parser first,Parser... chain)
-    {
+    public static Parser link(Parser first, Parser... chain) {
         Parser head = first;
 
-        for(Parser nextParser : chain)
-        {
+        for (Parser nextParser : chain) {
             head.next = nextParser;
             head = nextParser;
         }
@@ -19,13 +17,11 @@ public abstract class Parser {
         return first;
     }
 
-    protected ParseResult parseNext(String url)
-    {
-        if(next == null) return null;
+    protected ParseResult parseNext(String url) {
+        if (next == null) return null;
 
         return next.parse(url);
     }
-
 
 
 }
