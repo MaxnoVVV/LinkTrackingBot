@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "app",
+      "type": "ru.tinkoff.edu.java.bot.configuration.ApplicationConfig",
+      "sourceType": "ru.tinkoff.edu.java.bot.configuration.ApplicationConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "app.test",
+      "type": "java.lang.String",
+      "sourceType": "ru.tinkoff.edu.java.bot.configuration.ApplicationConfig"
+    }
+  ],
+  "hints": []
+}
