@@ -1,6 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.DTO.controllers;
+package ru.tinkoff.edu.java.scrapper.web.dto.controllers;
 
-import ru.tinkoff.edu.java.scrapper.web.DTO.controllers.LinkResponse;
-
-public record ListLinksResponse(LinkResponse[] links) {
+public record ListLinksResponse(int size, LinkResponse[] links) {
 }

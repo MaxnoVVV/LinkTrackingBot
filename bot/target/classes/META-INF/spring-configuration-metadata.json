@@ -8,6 +8,11 @@
   ],
   "properties": [
     {
+      "name": "app.t-o-k-e-n",
+      "type": "java.lang.String",
+      "sourceType": "ru.tinkoff.edu.java.bot.configuration.ApplicationConfig"
+    },
+    {
       "name": "app.test",
       "type": "java.lang.String",
       "sourceType": "ru.tinkoff.edu.java.bot.configuration.ApplicationConfig"

@@ -1,14 +1,14 @@
-package ru.tinkoff.edu.java.scrapper.web.Controllers;
+package ru.tinkoff.edu.java.scrapper.web.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.tinkoff.edu.java.scrapper.web.DTO.controllers.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.web.DTO.controllers.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.web.DTO.controllers.ListLinksResponse;
-import ru.tinkoff.edu.java.scrapper.web.DTO.controllers.RemoveLinkRequest;
+import ru.tinkoff.edu.java.scrapper.web.dto.controllers.AddLinkRequest;
+import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
+import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
+import ru.tinkoff.edu.java.scrapper.web.dto.controllers.RemoveLinkRequest;
 
 @RestController
 @RequestMapping(value = "/links")
@@ -17,7 +17,7 @@ public class LinksControllers {
     @Operation(summary = "Получить все отслеживаемые ссылки")
     public ResponseEntity<ListLinksResponse> getLinks(@RequestHeader("Tg-Chat-Id") int chatId)
     {
-        return new ResponseEntity<>(new ListLinksResponse(new LinkResponse[]{new LinkResponse(1, "string")}), HttpStatus.OK);
+        return new ResponseEntity<>(new ListLinksResponse(1,new LinkResponse[]{new LinkResponse(1, "string")}), HttpStatus.OK);
     }
 
     @PostMapping

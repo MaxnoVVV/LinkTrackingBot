@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.DTO.controllers;
+package ru.tinkoff.edu.java.scrapper.web.dto.controllers;
 
 public record LinkResponse(int id, String url) {
 }

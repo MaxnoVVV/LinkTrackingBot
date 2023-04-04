@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.Controllers;
+package ru.tinkoff.edu.java.scrapper.web.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;

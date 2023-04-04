@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.Controllers;
+package ru.tinkoff.edu.java.scrapper.web.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.tinkoff.edu.java.scrapper.web.DTO.controllers.ApiErrorResponse;
+import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
 
 @RestControllerAdvice
 public class ScrapperControllerAdvice {

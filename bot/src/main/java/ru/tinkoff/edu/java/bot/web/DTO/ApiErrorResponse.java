@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.web.DTO;
+package ru.tinkoff.edu.java.bot.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

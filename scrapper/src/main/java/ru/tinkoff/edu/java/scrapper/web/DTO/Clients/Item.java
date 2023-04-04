@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.DTO.Clients;
+package ru.tinkoff.edu.java.scrapper.web.dto.clients;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
