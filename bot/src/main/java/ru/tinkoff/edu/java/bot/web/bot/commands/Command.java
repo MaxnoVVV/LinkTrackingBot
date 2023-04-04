@@ -8,8 +8,9 @@ public abstract class Command {
 
     protected static BotClient client;
 
-    public static Command link(Command first, Command... chain) {
+    public static Command build(BotClient client, Command first, Command... chain) {
         Command head = first;
+        Command.client = client;
 
         for (Command nextCommand : chain) {
             head.next = nextCommand;

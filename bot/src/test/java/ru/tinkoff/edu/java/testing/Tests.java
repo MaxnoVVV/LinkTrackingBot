@@ -10,9 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.tinkoff.edu.java.bot.web.bot.commands.Command;
-import ru.tinkoff.edu.java.bot.web.bot.commands.CommandResponse;
-import ru.tinkoff.edu.java.bot.web.bot.commands.SuccessCommandResponse;
+import ru.tinkoff.edu.java.bot.web.bot.commands.*;
 import ru.tinkoff.edu.java.bot.web.client.BotClient;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
@@ -45,7 +43,7 @@ public class Tests {
         Mockito.when(message.text()).thenReturn("/list");
         Mockito.when(client.getLinks(Mockito.anyLong())).thenReturn(new ListLinksResponse(2,new LinkResponse[]{new LinkResponse(1,link1),new LinkResponse(2,link2)}));
 
-        Command command = Command.build(client);
+        Command command = Command.build(client, new HelpCommand(),new StartCommand(),new ListCommand(),new TrackCommand(),new UntrackCommand());
 
         CommandResponse request = command.proccess(update);
 

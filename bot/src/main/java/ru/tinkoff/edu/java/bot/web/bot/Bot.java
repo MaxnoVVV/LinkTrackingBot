@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 public class Bot implements AutoCloseable {
     private static TelegramBot bot;
-    private final static Command commandProcessor = Command.build(new BotClient());
+    private final static Command commandProcessor = Command.build(new BotClient(),new HelpCommand(),new ListCommand(),new StartCommand(),new TrackCommand(),new UntrackCommand());
 
     public Bot(String TOKEN) {
         bot = new TelegramBot(TOKEN);
@@ -92,7 +92,7 @@ public class Bot implements AutoCloseable {
                 && update.message().replyToMessage() != null
                 && update.message().replyToMessage().viaBot() != null
                 && update.message().replyToMessage().viaBot().isBot()) {
-            log.info(String.format("Update %d is link", update.updateId())); // make behavior for invalidlink
+            log.info(String.format("Update %d is link", update.updateId()));
 
             if (update.message().replyToMessage().text().equals("Отправьте ссылку для отслеживания")) {
                 bot.execute(TrackCommand.startTrack(update));
