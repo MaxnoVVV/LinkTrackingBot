@@ -6,11 +6,11 @@ import ru.tinkoff.edu.java.scrapper.web.dto.controllers.AddLinkRequest;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.RemoveLinkRequest;
 
-public class BotClient {
+public class ScrapperClient {
     private static String baseurl;
     private WebClient client;
 
-    public BotClient()
+    public ScrapperClient()
     {
         client = WebClient
                 .builder()
@@ -20,7 +20,7 @@ public class BotClient {
                 .build();
         baseurl = "localhost:8080";
     }
-    public BotClient(String url)
+    public ScrapperClient(String url)
     {
         client = WebClient
                 .builder()

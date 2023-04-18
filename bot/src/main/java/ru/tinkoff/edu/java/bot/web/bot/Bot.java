@@ -9,9 +9,8 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.edu.java.bot.web.bot.commands.*;
-import ru.tinkoff.edu.java.bot.web.client.BotClient;
+import ru.tinkoff.edu.java.bot.web.client.ScrapperClient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 @Slf4j
 public class Bot implements AutoCloseable {
     private static TelegramBot bot;
-    private final static Command commandProcessor = Command.build(new BotClient(),new HelpCommand(),new ListCommand(),new StartCommand(),new TrackCommand(),new UntrackCommand());
+    private final static Command commandProcessor = Command.build(new ScrapperClient(),new HelpCommand(),new ListCommand(),new StartCommand(),new TrackCommand(),new UntrackCommand());
 
     public Bot(String TOKEN) {
         bot = new TelegramBot(TOKEN);

@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.tinkoff.edu.java.bot.web.bot.commands.*;
-import ru.tinkoff.edu.java.bot.web.client.BotClient;
+import ru.tinkoff.edu.java.bot.web.client.ScrapperClient;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
 
@@ -27,7 +27,7 @@ public class Tests {
     @Mock
     Chat chat = new Chat();
     @Mock
-    BotClient client = new BotClient();
+    ScrapperClient client = new ScrapperClient();
 
 
     @SneakyThrows

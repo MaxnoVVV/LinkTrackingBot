@@ -1,14 +1,13 @@
 package ru.tinkoff.edu.java.bot.web.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
-import ru.tinkoff.edu.java.bot.web.client.BotClient;
+import ru.tinkoff.edu.java.bot.web.client.ScrapperClient;
 
 public abstract class Command {
 
-    protected static BotClient client;
+    protected static ScrapperClient client;
 
-    public static Command build(BotClient client, Command first, Command... chain) {
+    public static Command build(ScrapperClient client, Command first, Command... chain) {
         Command head = first;
         Command.client = client;
 
