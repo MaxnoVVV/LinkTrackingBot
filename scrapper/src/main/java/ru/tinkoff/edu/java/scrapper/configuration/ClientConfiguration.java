@@ -2,9 +2,8 @@ package ru.tinkoff.edu.java.scrapper.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.tinkoff.edu.java.scrapper.web.DTO.Clients.StackOverFlowResponse;
-import ru.tinkoff.edu.java.scrapper.web.WebClients.GitHubWebClient;
-import ru.tinkoff.edu.java.scrapper.web.WebClients.StackOverFlowWebClient;
+import ru.tinkoff.edu.java.scrapper.web.clients.GitHubWebClient;
+import ru.tinkoff.edu.java.scrapper.web.clients.StackOverFlowWebClient;
 
 @Configuration
 public class ClientConfiguration {
