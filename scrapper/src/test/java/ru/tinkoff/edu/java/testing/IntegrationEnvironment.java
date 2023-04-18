@@ -3,89 +3,87 @@ package ru.tinkoff.edu.java.testing;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
+import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.resource.DirectoryResourceAccessor;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Testcontainers
+//@Testcontainers
 abstract class AbstractPostgresContaineraseTest
 {
+    static Network network;
+    static PostgreSQLContainer<?> db;
+    {
+        network = Network.newNetwork();
+        db = new PostgreSQLContainer<>()
+            .withExposedPorts(8080,5432)
+            .withUsername("postgres")
+            .withPassword("postgres")
+            .withDatabaseName("db")
+            .withNetwork(network)
+            .withNetworkAliases("db");
+        db.start();
+    }
+}
 
-    @Container
-    static final PostgreSQLContainer<?> postgreSQLContainer;
+@SpringBootTest
+public class IntegrationEnvironment extends AbstractPostgresContaineraseTest {
+    @Test
+    public void test() throws IOException {
 
-    static final Liquibase liquibase;
 
-    private static final Connection connection;
+        String url = db.getJdbcUrl();
+        System.out.println(url);
 
-    static {
-        postgreSQLContainer = new PostgreSQLContainer<>("postgres:14")
-                .withReuse(true)
-                .withDatabaseName("scrapper");
-        postgreSQLContainer.start();
-        try {
-            connection = DriverManager.getConnection(postgreSQLContainer.getJdbcUrl(),postgreSQLContainer.getUsername(),postgreSQLContainer.getPassword());
-            System.out.println("Success");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            liquibase = new Liquibase(new File(".")
-                    .toPath()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .resolve("migrations")
-                    .resolve("migrations")
-                    .resolve("master.xml").toString()
-                    ,new ClassLoaderResourceAccessor()
-                    ,DatabaseFactory
-                    .getInstance()
-                    .findCorrectDatabaseImplementation(new JdbcConnection(connection)));
-                    System.out.println("Success");
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+        Path userDirectory = Paths.get("")
+                .toAbsolutePath().getParent().resolve("migrations").resolve("migrations");
+
+        System.out.println(userDirectory);
+        Connection connection;
+
+        {
+            try {
+                connection = DriverManager.getConnection(db.getJdbcUrl(),db.getUsername(),db.getPassword());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
+        Database database;
+
+        {
+            try {
+                database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+            } catch (DatabaseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Liquibase liquibase = new liquibase.Liquibase("master.xml",new DirectoryResourceAccessor(userDirectory),database);
         try {
             liquibase.update(new Contexts(),new LabelExpression());
-            System.out.println("Success");
         } catch (LiquibaseException e) {
             throw new RuntimeException(e);
         }
 
+        System.in.read();
     }
-
-
-}
-
-@Testcontainers
-public class IntegrationEnvironment extends AbstractPostgresContaineraseTest {
-
-
-@Test
-    public void EmptyTest()
-{
-    System.out.println("empty");
-}
-
-
 }
