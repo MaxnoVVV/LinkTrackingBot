@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 @Getter
 @NoArgsConstructor
@@ -21,7 +22,7 @@ public class Item {
     private Owner owner;
 
     public OffsetDateTime getCreation_date() {
-        return OffsetDateTime.ofInstant(Instant.ofEpochSecond(creation_date),ZoneId.systemDefault());
+        return OffsetDateTime.ofInstant(Instant.ofEpochSecond(creation_date), ZoneOffset.UTC);
     }
 }
 

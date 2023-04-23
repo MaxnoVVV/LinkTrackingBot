@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import ru.tinkoff.edu.java.scrapper.web.dto.clients.Actor;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 @Getter
@@ -19,7 +20,7 @@ public class CommonEvent {
     String type;
     Actor actor;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Date created_at;
+    private OffsetDateTime created_at;
     JsonNode payload;
     Object org;
 

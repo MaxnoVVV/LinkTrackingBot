@@ -18,7 +18,7 @@ public final class StackOverFlowParser extends Parser {
             Matcher tempmatcher = Pattern.compile("/\\d+/").matcher(matcher.group(0));
             tempmatcher.find();
 
-            return new StackOverFlowResult(Integer.parseInt(tempmatcher.group(0).substring(1, tempmatcher.group(0).length() - 1)));
+            return new StackOverFlowResult(tempmatcher.group(0).substring(1, tempmatcher.group(0).length() - 1));
         } catch (Exception e) {
             return parseNext(url);
         }

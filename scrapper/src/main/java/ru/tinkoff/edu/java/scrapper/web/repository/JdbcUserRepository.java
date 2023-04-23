@@ -7,26 +7,21 @@ import ru.tinkoff.edu.java.scrapper.web.dto.repository.User;
 
 import java.util.List;
 
-@Repository
-public class UserRepository
+@Repository("userRepository")
+public class JdbcUserRepository
 {
-    private final JdbcTemplate jdbcTemplate;
-
-
     @Autowired
-    public UserRepository(JdbcTemplate jdbcTemplate)
+    private JdbcTemplate jdbcTemplate;
+
+
+    public int add(long id)
     {
-        this.jdbcTemplate = jdbcTemplate;
+        return jdbcTemplate.update("INSERT INTO users (Id) VALUES (?)",id);
     }
 
-    public void add(long id)
+    public int remove(long id)
     {
-        jdbcTemplate.update("INSERT INTO users (Id) VALUES (?)",id);
-    }
-
-    public void remove(long id)
-    {
-        jdbcTemplate.update("DELETE FROM users WHERE Id = ?",id);
+        return jdbcTemplate.update("DELETE FROM users WHERE Id = ?",id);
     }
 
     public List<User> findAll()

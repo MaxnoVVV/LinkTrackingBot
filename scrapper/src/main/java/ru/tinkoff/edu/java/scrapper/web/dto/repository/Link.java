@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.OffsetDateTime;
 
 
-public record Link(int link_id, String link, int tracking_user, OffsetDateTime last_check) {
+public record Link(int link_id, String link, long tracking_user, OffsetDateTime last_check) {
     int getLink_id()
     {
         return link_id;
@@ -18,7 +18,7 @@ public record Link(int link_id, String link, int tracking_user, OffsetDateTime l
         return  link;
     }
 
-    public int getTracking_user()
+    public long getTracking_user()
     {
         return tracking_user;
     }

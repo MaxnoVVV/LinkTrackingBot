@@ -8,18 +8,19 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
-import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.DirectoryResourceAccessor;
-import org.junit.Test;
+import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.tinkoff.edu.java.testing.configuration.IntegrationTestsConfiguration;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,14 +28,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-//@Testcontainers
+@Testcontainers
 abstract class AbstractPostgresContaineraseTest
 {
     static Network network;
+
+    @Container
     static PostgreSQLContainer<?> db;
-    {
+    static {
         network = Network.newNetwork();
-        db = new PostgreSQLContainer<>()
+        db = new PostgreSQLContainer<>("postgres:14")
             .withExposedPorts(8080,5432)
             .withUsername("postgres")
             .withPassword("postgres")
@@ -43,21 +46,30 @@ abstract class AbstractPostgresContaineraseTest
             .withNetworkAliases("db");
         db.start();
     }
+
+    @DynamicPropertySource
+    static void postgresqlProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", db::getJdbcUrl);
+        registry.add("spring.datasource.username", db::getUsername);
+        registry.add("spring.datasource.password", db::getPassword);
+    }
 }
 
 @SpringBootTest
+@Import(IntegrationTestsConfiguration.class)
 public class IntegrationEnvironment extends AbstractPostgresContaineraseTest {
-    @Test
-    public void test() throws IOException {
+
+    @BeforeClass
+    public static void init() throws IOException {
 
 
-        String url = db.getJdbcUrl();
-        System.out.println(url);
+//        String url = db.getJdbcUrl();
+//        System.out.println(url);
 
         Path userDirectory = Paths.get("")
                 .toAbsolutePath().getParent().resolve("migrations").resolve("migrations");
 
-        System.out.println(userDirectory);
+//        System.out.println(userDirectory);
         Connection connection;
 
         {
@@ -84,6 +96,7 @@ public class IntegrationEnvironment extends AbstractPostgresContaineraseTest {
             throw new RuntimeException(e);
         }
 
-        System.in.read();
+
+
     }
 }

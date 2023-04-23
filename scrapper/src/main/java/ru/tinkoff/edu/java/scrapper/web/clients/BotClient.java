@@ -1,11 +1,15 @@
 package ru.tinkoff.edu.java.scrapper.web.clients;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.web.dto.forclient.dto.LinkUpdateRequest;
 
+@Component("botClient")
 public class BotClient {
 
     private WebClient client;
@@ -33,9 +37,14 @@ public class BotClient {
     {
         return client.post()
                 .uri("/updates")
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(update))
-                .retrieve().bodyToMono(ResponseEntity.class).block();
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError(),resp -> Mono.empty())
+                .onStatus(status -> status.is5xxServerError(),resp -> Mono.empty())
+                .toEntity(String.class)
+                .block();
     }
 
 }
