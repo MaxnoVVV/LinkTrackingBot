@@ -2,6 +2,9 @@ package ru.tinkoff.edu.java.scrapper.web.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.GitHubResult;
@@ -35,45 +38,63 @@ public class LinkUpdaterScheduler {
     @Autowired
     private StackOverFlowWebClient stackOverFlowWebClient;
 
-    @Autowired
-    private BotClient botClient;
+    private BotClient botClient = new BotClient();
     @Autowired
     private JdbcLinkRepository jdbcLinkRepository;
 
     @Autowired
     Parser parser;
 
+
+    List<Link> links;
+
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
         log.info("update");
-        List<Link> links = jdbcLinkRepository.findAll();
-        links = links.stream().filter(l -> Duration.between(OffsetDateTime.now(ZoneOffset.UTC),l.getLast_check()).toMinutes() > 15).toList();
-        for(Link link : links)
+        try
         {
-            ParseResult result = parser.parse(link.getLink());
-
-            if(result instanceof StackOverFlowResult)
-            {
-                Item[] response = stackOverFlowWebClient.getAnswers(((StackOverFlowResult)result).id()).getItems();
-                for(Item item : response)
-                {
-                    if(item.getCreation_date().isAfter(link.getLast_check()))
+             links = jdbcLinkRepository.findAll();
+             links = links.stream().filter(l -> Duration.between(l.getLast_check(),OffsetDateTime.now(ZoneOffset.UTC)).toMinutes() > 15).toList();
+             for(Link link : links)
+             {
+                 ParseResult result = parser.parse(link.getLink());
+                 ResponseEntity clientResponse = null;
+                 if(result instanceof StackOverFlowResult)
+                 {
+                     Item[] response = stackOverFlowWebClient.getAnswers(((StackOverFlowResult)result).id()).getItems();
+                     log.info(response.toString());
+                     for(Item item : response)
+                     {
+                        if(item.getCreation_date().isAfter(link.getLast_check()))
+                        {
+                            clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"update",new long[] {link.tracking_user()}));
+                        }
+                     }
+                 }
+                 else
+                 {
+                    List<CommonEvent> events = gitHubWebClient.getInfo(((GitHubResult) result).name(),((GitHubResult) result).repository());
+                    for(CommonEvent event : events)
                     {
-                        botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"update",new long[] {link.tracking_user()}));
+                        if(event.getOffsetDataTime().isAfter(link.getLast_check()))
+                        {
+                            log.info(event.getOffsetDataTime().toString());
+                            clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"update",new long[]{link.tracking_user()}));
+                        }
                     }
-                }
-            }
-            else
-            {
-                List<CommonEvent> events = gitHubWebClient.getInfo(((GitHubResult) result).name(),((GitHubResult) result).name());
-                for(CommonEvent event : events)
-                {
-                    if(event.getCreated_at().isAfter(link.getLast_check()))
-                    {
-                       botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"update",new long[]{link.tracking_user()}));
-                    }
-                }
-            }
+                 }
+                 if(clientResponse != null && clientResponse.getStatusCode().is2xxSuccessful())
+                 {
+                        jdbcLinkRepository.update(link.tracking_user(),link.getLink());
+                 }
+             }
         }
+        catch(DataAccessException e)
+        {
+            log.error(e.toString());
+            log.error(e.getMessage());
+        }
+
+
     }
 }

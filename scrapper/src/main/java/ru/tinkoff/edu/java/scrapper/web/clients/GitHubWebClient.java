@@ -4,15 +4,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.web.dto.clients.events.CommonEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
-
+@Slf4j
 public class GitHubWebClient {
     private WebClient client;
-    StringBuffer uri;
+    String uri;
 
     public GitHubWebClient() {
         client = WebClient
@@ -20,7 +24,7 @@ public class GitHubWebClient {
                 .codecs(codecs -> codecs.defaultCodecs()
                         .maxInMemorySize(1000000))// property
                 .build();
-        uri = new StringBuffer("https://api.github.com/repos/");
+        uri = "https://api.github.com/repos/";
     }
 
     public GitHubWebClient(String url) {
@@ -29,27 +33,40 @@ public class GitHubWebClient {
                 .codecs(codecs -> codecs.defaultCodecs()
                         .maxInMemorySize(1000000))// property
                 .build();
-        uri = new StringBuffer(url);
+        uri = url;
     }
 
     @SneakyThrows
     public List<CommonEvent> getInfo(String owner, String repo) {
 
-        uri.append(owner + "/");
-        uri.append(repo + "/");
-        uri.append("events");
+        StringBuffer tempuri = new StringBuffer(uri);
+        tempuri.append(owner + "/");
+        tempuri.append(repo + "/");
+        tempuri.append("events");
 
         ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        log.info(tempuri.toString());
 
-        String temp = client
+        ResponseEntity temp = client
                 .get()
-                .uri(uri.toString())
+                .uri(tempuri.toString())
                 .retrieve()
-                .bodyToMono(String.class).block();
+                .onStatus(httpStatusCode -> httpStatusCode.is4xxClientError(),resp -> Mono.empty())
+                .onStatus(httpStatusCode -> httpStatusCode.is5xxServerError(),resp -> Mono.empty())
+                .toEntity(String.class).block();
 
-        return mapper.readValue(temp, new TypeReference<List<CommonEvent>>() {
-        });
+        if(temp.getStatusCode().is2xxSuccessful())
+        {
+            return mapper.readValue(temp.getBody().toString(), new TypeReference<List<CommonEvent>>() {
+            });
+        }
+        else
+        {
+            return new ArrayList<CommonEvent>();
+        }
+
+
     }
 }

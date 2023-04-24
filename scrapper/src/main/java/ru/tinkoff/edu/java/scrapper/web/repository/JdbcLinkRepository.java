@@ -32,5 +32,10 @@ public class JdbcLinkRepository {
         return jdbcTemplate.update("DELETE FROM links WHERE link = ? AND tracking_user = ?",link,tgChatId);
     }
 
+    public int update(long tgChatId,String link)
+    {
+        return jdbcTemplate.update("UPDATE links SET last_check = ? WHERE tracking_user = ? AND link = ?",OffsetDateTime.now(ZoneOffset.UTC),tgChatId,link);
+    }
+
 
 }

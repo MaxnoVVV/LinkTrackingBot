@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.ToString;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import ru.tinkoff.edu.java.scrapper.web.dto.clients.Item;
 import ru.tinkoff.edu.java.scrapper.web.dto.clients.StackOverFlowResponse;
 
 @ToString
@@ -38,9 +41,22 @@ public class StackOverFlowWebClient {
 
     @SneakyThrows
     public StackOverFlowResponse getAnswers(String id) {
-        String tempuri = String.format(uri,id,filter);
-        String tempJson = client.get().uri(tempuri).retrieve().bodyToMono(String.class).block();
-
-        return mapper.readValue(tempJson, StackOverFlowResponse.class);
+        String tempuri = String.format(uri, id, filter);
+        ResponseEntity tempJson = client
+                .get()
+                .uri(tempuri)
+                .retrieve()
+                .onStatus(httpStatusCode -> httpStatusCode.is4xxClientError(), resp -> Mono.empty())
+                .onStatus(httpStatusCode -> httpStatusCode.is5xxServerError(), resp -> Mono.empty())
+                .toEntity(String.class)
+                .block();
+        if (tempJson.getStatusCode().is2xxSuccessful()) {
+            return mapper.readValue(tempJson.getBody().toString(), StackOverFlowResponse.class);
         }
+        else
+        {
+            return new StackOverFlowResponse(new Item[]{});
+        }
+    }
+
 }

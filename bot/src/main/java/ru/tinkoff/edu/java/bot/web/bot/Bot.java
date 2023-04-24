@@ -56,6 +56,11 @@ public class Bot implements AutoCloseable {
         });
     }
 
+    public void receiveUpdate(long tgChatId,String url,String description)
+    {
+        SendMessage message = new SendMessage(tgChatId,"Получено обновление по ссылке \r\n" + url);
+        bot.execute(message);
+    }
     @Override
     public void close() throws Exception {
         bot.removeGetUpdatesListener();

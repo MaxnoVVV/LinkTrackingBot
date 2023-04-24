@@ -21,7 +21,7 @@ public class BotClient {
                 .codecs(codecs -> codecs.defaultCodecs()
                         .maxInMemorySize(1000000))// property
                 .build();
-        uri = new StringBuffer("localhost:8080");
+        uri = new StringBuffer("http://localhost:8080");
     }
 
     public BotClient(String url) {
@@ -36,7 +36,7 @@ public class BotClient {
     public ResponseEntity<?> sendUpdate(LinkUpdateRequest update)
     {
         return client.post()
-                .uri("/updates")
+                .uri(uri.toString() + "/updates")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(update))
