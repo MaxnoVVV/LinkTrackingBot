@@ -13,11 +13,15 @@ import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
 
 import java.util.Arrays;
 
-@Service("tgChatService")
+
 @Slf4j
 public class JdbcTgChatService implements TgChatService {
-    @Autowired
     JdbcUserRepository repository;
+
+    public JdbcTgChatService(JdbcUserRepository repository)
+    {
+        this.repository = repository;
+    }
     @Override
     public ResponseEntity<?> register(long tgChatId) {
         try

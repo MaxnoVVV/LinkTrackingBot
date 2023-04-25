@@ -20,14 +20,16 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @Slf4j
-@Service("linkService")
 public class JdbcLinkService  implements LinkService {
 
-    @Autowired
     Parser parser;
-    @Autowired
     JdbcLinkRepository repository;
 
+    public JdbcLinkService(Parser parser,JdbcLinkRepository repository)
+    {
+        this.parser = parser;
+        this.repository = repository;
+    }
 
     @Override
     public int update() {

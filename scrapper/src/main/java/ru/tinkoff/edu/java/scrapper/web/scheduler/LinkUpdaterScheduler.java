@@ -51,7 +51,7 @@ public class LinkUpdaterScheduler {
 
     List<Link> links;
 
-    @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
+    //@Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
         log.info("update");
         try
