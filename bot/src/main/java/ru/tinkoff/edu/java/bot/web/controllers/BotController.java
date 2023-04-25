@@ -18,7 +18,7 @@ public class BotController {
     @Operation(summary = "Отправить обновление")
     public ResponseEntity<?> linkUpdate(@Valid @RequestBody LinkUpdateRequest request) {
         log.info("got update");
-        bot.receiveUpdate(request.thChatIds()[0],request.url(),"nothing");
+        bot.receiveUpdate(request.thChatIds()[0],request.url(),request.description());
         return ResponseEntity.ok().build();
     }
 }

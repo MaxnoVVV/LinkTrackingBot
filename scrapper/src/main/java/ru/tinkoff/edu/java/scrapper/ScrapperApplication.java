@@ -15,8 +15,8 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableConfigurationProperties(ApplicationConfig.class)
-@EnableScheduling
 @Import(DbConfig.class)
+@EnableScheduling
 public class ScrapperApplication {
 
     @Autowired

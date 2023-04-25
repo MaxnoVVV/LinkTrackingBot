@@ -58,7 +58,7 @@ public class Bot implements AutoCloseable {
 
     public void receiveUpdate(long tgChatId,String url,String description)
     {
-        SendMessage message = new SendMessage(tgChatId,"Получено обновление по ссылке \r\n" + url);
+        SendMessage message = new SendMessage(tgChatId,description);
         bot.execute(message);
     }
     @Override

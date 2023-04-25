@@ -26,7 +26,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -46,6 +48,7 @@ public class LinkUpdaterScheduler {
     Parser parser;
 
 
+
     List<Link> links;
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
@@ -62,12 +65,11 @@ public class LinkUpdaterScheduler {
                  if(result instanceof StackOverFlowResult)
                  {
                      Item[] response = stackOverFlowWebClient.getAnswers(((StackOverFlowResult)result).id()).getItems();
-                     log.info(response.toString());
                      for(Item item : response)
                      {
                         if(item.getCreation_date().isAfter(link.getLast_check()))
                         {
-                            clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"update",new long[] {link.tracking_user()}));
+                            clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"Появился новый ответ на " + link.getLink(),new long[] {link.tracking_user()}));
                         }
                      }
                  }
@@ -78,15 +80,31 @@ public class LinkUpdaterScheduler {
                     {
                         if(event.getOffsetDataTime().isAfter(link.getLast_check()))
                         {
-                            log.info(event.getOffsetDataTime().toString());
-                            clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"update",new long[]{link.tracking_user()}));
+                            String description = null;
+                            if(event.getType().equals("CreateEvent"))
+                            {
+                                description = "В репозитории появился новый " + event.getPayload().get("ref_type") + "\r\n" + link.getLink();
+                            }
+                            else if(event.getType().equals("PushEvent"))
+                            {
+                                description = "В репозитории появился новый push\r\n" + link.getLink();
+                            }
+                            else if(event.getType().equals("PullRequestEvent"))
+                            {
+                                description = "В репозитории появился новый pull request\r\n" + link.getLink();
+                            }
+                            if(description != null)
+                            {
+                                clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),description,new long[]{link.tracking_user()}));
+                            }
                         }
                     }
                  }
-                 if(clientResponse != null && clientResponse.getStatusCode().is2xxSuccessful())
+                 if(clientResponse == null || (clientResponse != null && clientResponse.getStatusCode().is2xxSuccessful()))
                  {
-                        jdbcLinkRepository.update(link.tracking_user(),link.getLink());
+                     jdbcLinkRepository.update(link.tracking_user(),link.getLink());
                  }
+
              }
         }
         catch(DataAccessException e)
