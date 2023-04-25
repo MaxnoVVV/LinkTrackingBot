@@ -10,20 +10,25 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Component;
+import ru.tinkoff.edu.java.bot.configuration.BotConfig;
 import ru.tinkoff.edu.java.bot.web.bot.commands.*;
-import ru.tinkoff.edu.java.bot.web.client.BotClient;
+import ru.tinkoff.edu.java.bot.web.client.ScrapperClient;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
+@Component
+@Import(BotConfig.class)
 public class Bot implements AutoCloseable {
-    private static TelegramBot bot;
-    private final static Command commandProcessor = Command.build(new BotClient(),new HelpCommand(),new ListCommand(),new StartCommand(),new TrackCommand(),new UntrackCommand());
+    @Autowired
+    private TelegramBot bot;
 
-    public Bot(String TOKEN) {
-        bot = new TelegramBot(TOKEN);
-    }
+    @Autowired
+    private  Command commandProcessor;
 
     public void addCommands() //bonus Task
     {
@@ -43,6 +48,7 @@ public class Bot implements AutoCloseable {
             public int process(List<Update> updates) {
                 for (Update update : updates) {
                     log.info("Got new update");
+                    if(update.updateId() == 795769925 || update.updateId() == 795769927) continue;
                     processUpdate(update);
                 }
                 return UpdatesListener.CONFIRMED_UPDATES_ALL;
@@ -50,6 +56,11 @@ public class Bot implements AutoCloseable {
         });
     }
 
+    public void receiveUpdate(long tgChatId,String url,String description)
+    {
+        SendMessage message = new SendMessage(tgChatId,description);
+        bot.execute(message);
+    }
     @Override
     public void close() throws Exception {
         bot.removeGetUpdatesListener();
@@ -90,8 +101,7 @@ public class Bot implements AutoCloseable {
 
         } else if (update.message() != null
                 && update.message().replyToMessage() != null
-                && update.message().replyToMessage().viaBot() != null
-                && update.message().replyToMessage().viaBot().isBot()) {
+                && update.message().replyToMessage().from().isBot()) {
             log.info(String.format("Update %d is link", update.updateId()));
 
             if (update.message().replyToMessage().text().equals("Отправьте ссылку для отслеживания")) {

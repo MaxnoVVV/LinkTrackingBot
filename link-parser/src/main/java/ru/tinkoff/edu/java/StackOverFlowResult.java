@@ -1,4 +1,4 @@
 package ru.tinkoff.edu.java;
 
-public record StackOverFlowResult(int id) implements ParseResult {
+public record StackOverFlowResult(String id) implements ParseResult {
 }

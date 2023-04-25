@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.tinkoff.edu.java.scrapper.web.dto.controllers.RemoveLinkRequest;
+import ru.tinkoff.edu.java.bot.web.dto.clients.RemoveLinkRequest;
 
 @Slf4j
 public class UntrackCommand extends Command {
