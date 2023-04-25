@@ -11,5 +11,6 @@ public interface LinkService {
     int update();
     ResponseEntity<?> add(long tgChatId, URI uri);
     ResponseEntity<?> remove(long tgChatId, URI uri);
+
     public ResponseEntity<?> listAll(long tgChatId);
 }

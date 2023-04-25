@@ -31,9 +31,9 @@ import java.net.URI;
 @EntityScan("ru.tinkoff.edu.java.scrapper.web.entity")
 @RunWith(SpringRunner.class)
 @Import({IntegrationTestsConfiguration.class, JpaAccessConfiguration.class})
-@ContextConfiguration(classes = {JpaAccessConfiguration.class,IntegrationTestsConfiguration.class})
+@ContextConfiguration(classes = {JpaAccessConfiguration.class, IntegrationTestsConfiguration.class})
 @EnableAutoConfiguration
-public class JpaServiceTest extends IntegrationEnvironment{
+public class JpaServiceTest extends IntegrationEnvironment {
     @Autowired
     DataSource dataSource;
     @Autowired
@@ -46,8 +46,7 @@ public class JpaServiceTest extends IntegrationEnvironment{
     TgChatService tgChatService;
 
     @Test
-    public void tests()
-    {
+    public void tests() {
         String url1 = "https://stackoverflow.com/questions/32269192/spring-no-entitymanager-with-actual-transaction-available-for-current-thread";
         String url2 = "https://github.com/MaxnoVVV/TinkoffBot/";
         Assertions.assertNotNull(dataSource);
@@ -67,27 +66,26 @@ public class JpaServiceTest extends IntegrationEnvironment{
         Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
 
         //tgChatService
-        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM users",new DataClassRowMapper<>(User.class)).size() == 3);
-        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM users",new DataClassRowMapper<>(User.class)).stream().anyMatch(u -> u.id() == 1));
+        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM users", new DataClassRowMapper<>(User.class)).size() == 3);
+        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM users", new DataClassRowMapper<>(User.class)).stream().anyMatch(u -> u.id() == 1));
         response = tgChatService.unregister(1);
         System.out.println(response.getStatusCode());
-        Assertions.assertFalse(jdbcTemplate.query("SELECT * FROM users",new DataClassRowMapper<>(User.class)).stream().anyMatch(u -> u.id() == 1));
+        Assertions.assertFalse(jdbcTemplate.query("SELECT * FROM users", new DataClassRowMapper<>(User.class)).stream().anyMatch(u -> u.id() == 1));
 
         //LinkService
 
         linkService.add(2, URI.create(url1));
-        linkService.add(3,URI.create(url2));
+        linkService.add(3, URI.create(url2));
 
-        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links",new DataClassRowMapper<>(Link.class)).size() == 2);
-        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links",new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.tracking_user() == 2));
-        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links",new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url2) && u.tracking_user() == 3));
-        
+        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).size() == 2);
+        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.tracking_user() == 2));
+        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url2) && u.tracking_user() == 3));
 
-        Assertions.assertFalse(jdbcTemplate.query("SELECT * FROM links",new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.tracking_user() == 2));
 
-        response = linkService.remove(2,URI.create(url1));
+        Assertions.assertFalse(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.tracking_user() == 2));
+
+        response = linkService.remove(2, URI.create(url1));
         Assertions.assertTrue(response.getStatusCode().is4xxClientError());
-
 
 
     }

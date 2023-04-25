@@ -11,27 +11,25 @@ import ru.tinkoff.edu.java.scrapper.web.repository.JpaUserRepository;
 import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
 
 import java.util.Arrays;
+
 @Slf4j
 public class JpaTgChatService implements TgChatService {
 
     JpaUserRepository repository;
 
-    public JpaTgChatService(JpaUserRepository repository)
-    {
+    public JpaTgChatService(JpaUserRepository repository) {
         this.repository = repository;
     }
+
     @Override
     public ResponseEntity<?> register(long tgChatId) {
         log.info("registering " + tgChatId);
         User user = new User();
         user.setTgId(tgChatId);
-        try
-        {
+        try {
             User responseUser = repository.save(user);
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error(e.toString());
             log.error(e.getMessage());
             return new ResponseEntity<>(new ApiErrorResponse("no links added",
@@ -49,21 +47,17 @@ public class JpaTgChatService implements TgChatService {
         User user = new User();
         user.setTgId(tgChatId);
         log.info("unregistering " + tgChatId);
-        if(repository.findAllByTgId(tgChatId).isEmpty())
-        {
+        if (repository.findAllByTgId(tgChatId).isEmpty()) {
             return new ResponseEntity<>(new ApiErrorResponse("chat not found",
                     "400",
                     "chat not found",
                     "chat not found",
                     null), HttpStatus.BAD_REQUEST);
         }
-        try
-        {
+        try {
             repository.deleteAllByTgId(tgChatId);
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error(e.toString());
             return new ResponseEntity<>(new ApiErrorResponse(e.getMessage(),
                     "400",

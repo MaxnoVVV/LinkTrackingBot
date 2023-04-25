@@ -13,18 +13,15 @@ public class JdbcUserRepository {
     private JdbcTemplate jdbcTemplate;
 
 
-    public int add(long id)
-    {
-        return jdbcTemplate.update("INSERT INTO users (Id) VALUES (?)",id);
+    public int add(long id) {
+        return jdbcTemplate.update("INSERT INTO users (Id) VALUES (?)", id);
     }
 
-    public int remove(long id)
-    {
-        return jdbcTemplate.update("DELETE FROM users WHERE Id = ?",id);
+    public int remove(long id) {
+        return jdbcTemplate.update("DELETE FROM users WHERE Id = ?", id);
     }
 
-    public List<User> findAll()
-    {
-        return jdbcTemplate.query("SELECT * FROM users",new UserMapper());
+    public List<User> findAll() {
+        return jdbcTemplate.query("SELECT * FROM users", new UserMapper());
     }
 }

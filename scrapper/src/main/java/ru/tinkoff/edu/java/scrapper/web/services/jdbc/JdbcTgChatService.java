@@ -18,59 +18,50 @@ import java.util.Arrays;
 public class JdbcTgChatService implements TgChatService {
     JdbcUserRepository repository;
 
-    public JdbcTgChatService(JdbcUserRepository repository)
-    {
+    public JdbcTgChatService(JdbcUserRepository repository) {
         this.repository = repository;
     }
+
     @Override
     public ResponseEntity<?> register(long tgChatId) {
-        try
-        {
+        try {
             log.info("trying register in service");
-            if(repository.findAll().stream().anyMatch(u -> u.id() == tgChatId))
-            {
-                return new ResponseEntity<>(new ApiErrorResponse("Usr exists","400","user exists","user exists",null),HttpStatus.BAD_REQUEST);
+            if (repository.findAll().stream().anyMatch(u -> u.id() == tgChatId)) {
+                return new ResponseEntity<>(new ApiErrorResponse("Usr exists", "400", "user exists", "user exists", null), HttpStatus.BAD_REQUEST);
             }
             repository.add(tgChatId);
             log.info("success");
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(DataAccessException e)
-        {
+        } catch (DataAccessException e) {
             log.error("error");
             log.error(e.toString());
             log.error(e.getMessage());
 
-            for(var ex : e.getStackTrace())
-            {
+            for (var ex : e.getStackTrace()) {
                 log.error(ex.toString());
             }
 
-            return new ResponseEntity<>(new ApiErrorResponse("error","400",e.toString(),e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiErrorResponse("error", "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.BAD_REQUEST);
         }
     }
 
     @Override
     public ResponseEntity<?> unregister(long tgChatId) {
 
-        try
-        {
+        try {
             int result = repository.remove(tgChatId);
-            if(result != 0)
-            {
+            if (result != 0) {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(new ApiErrorResponse("Chat not found",
                     "400",
                     "Chat not found",
                     "Chat not found",
-                    null),HttpStatus.BAD_REQUEST);
+                    null), HttpStatus.BAD_REQUEST);
 
 
-        }
-        catch(DataAccessException e)
-        {
-            return new ResponseEntity<>(new ApiErrorResponse("error","400",e.toString(),e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)),HttpStatus.BAD_REQUEST);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(new ApiErrorResponse("error", "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.BAD_REQUEST);
         }
     }
 }

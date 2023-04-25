@@ -7,7 +7,7 @@ import ru.tinkoff.edu.java.scrapper.web.entity.User;
 import java.util.List;
 
 @Repository
-public interface JpaUserRepository extends JpaRepository<User,Long> {
+public interface JpaUserRepository extends JpaRepository<User, Long> {
     List<User> findAllByTgId(long tgId);
 
     void deleteAllByTgId(long tgId);

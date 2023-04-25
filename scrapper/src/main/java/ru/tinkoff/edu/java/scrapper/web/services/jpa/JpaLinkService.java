@@ -24,8 +24,8 @@ import java.util.Optional;
 public class JpaLinkService implements LinkService {
     Parser parser;
     JpaLinkRepository repository;
-    public JpaLinkService(JpaLinkRepository repository,Parser parser)
-    {
+
+    public JpaLinkService(JpaLinkRepository repository, Parser parser) {
         this.repository = repository;
         this.parser = parser;
     }
@@ -46,18 +46,15 @@ public class JpaLinkService implements LinkService {
 
         ParseResult parseResult = parser.parse(uri.toString());
 
-        if(parseResult != null && repository.findByLinkAndTracking_user(uri.toString(),tgChatId).isEmpty())
-        {
+        if (parseResult != null && repository.findByLinkAndTracking_user(uri.toString(), tgChatId).isEmpty()) {
             Link newLink = repository.save(link);
-            return new ResponseEntity<>(new LinkResponse(newLink.getLink_id(),uri.toString()), HttpStatus.OK);
-        }
-        else
-        {
+            return new ResponseEntity<>(new LinkResponse(newLink.getLink_id(), uri.toString()), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(new ApiErrorResponse("no links added",
-                "400",
-                "no links added",
-                "no links added",
-                null),HttpStatus.BAD_REQUEST);
+                    "400",
+                    "no links added",
+                    "no links added",
+                    null), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -69,26 +66,21 @@ public class JpaLinkService implements LinkService {
         link.setLast_check(OffsetDateTime.now(ZoneOffset.UTC));
         link.setTrackinguser(tgChatId);
 
-        List<Link> linksInTable = repository.findByLinkAndTracking_user(uri.toString(),tgChatId);
+        List<Link> linksInTable = repository.findByLinkAndTracking_user(uri.toString(), tgChatId);
 
-        if(linksInTable.isEmpty())
-        {
+        if (linksInTable.isEmpty()) {
             return new ResponseEntity<>(new ApiErrorResponse("no links",
                     "400",
                     "no links",
                     "no links",
-                    null),HttpStatus.BAD_REQUEST);
-        }
-        else
-        {
+                    null), HttpStatus.BAD_REQUEST);
+        } else {
             try {
-                repository.deleteAllByLinkAndTrackinguser(uri.toString(),tgChatId);
-                return new ResponseEntity<>(new LinkResponse(linksInTable.get(0).getLink_id(),uri.toString()),HttpStatus.OK);
-            }
-            catch(Exception e)
-            {
+                repository.deleteAllByLinkAndTrackinguser(uri.toString(), tgChatId);
+                return new ResponseEntity<>(new LinkResponse(linksInTable.get(0).getLink_id(), uri.toString()), HttpStatus.OK);
+            } catch (Exception e) {
                 log.error(e.toString());
-                return new ResponseEntity<>(new ApiErrorResponse(e.getMessage(),"500",e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)),HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(new ApiErrorResponse(e.getMessage(), "500", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.INTERNAL_SERVER_ERROR);
 
             }
         }
@@ -96,15 +88,12 @@ public class JpaLinkService implements LinkService {
 
     @Override
     public ResponseEntity<?> listAll(long tgChatId) {
-        try
-        {
+        try {
             List<Link> links = repository.findAllByTracking_user(tgChatId);
-            ListLinksResponse response = new ListLinksResponse(links.size(),links.stream().map(u -> new LinkResponse(u.getLink_id(),u.getLink())).toArray(LinkResponse[]::new));
-            return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch(Exception e)
-        {
-            return new ResponseEntity<>(new ApiErrorResponse(e.getMessage(),"400",e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)),HttpStatus.INTERNAL_SERVER_ERROR);
+            ListLinksResponse response = new ListLinksResponse(links.size(), links.stream().map(u -> new LinkResponse(u.getLink_id(), u.getLink())).toArray(LinkResponse[]::new));
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ApiErrorResponse(e.getMessage(), "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

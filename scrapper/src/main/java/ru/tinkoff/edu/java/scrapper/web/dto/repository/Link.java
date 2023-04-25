@@ -8,23 +8,19 @@ import java.time.OffsetDateTime;
 
 
 public record Link(int link_id, String link, long tracking_user, OffsetDateTime last_check) {
-    int getLink_id()
-    {
+    int getLink_id() {
         return link_id;
     }
 
-    public String getLink()
-    {
-        return  link;
+    public String getLink() {
+        return link;
     }
 
-    public long getTracking_user()
-    {
+    public long getTracking_user() {
         return tracking_user;
     }
 
-    public OffsetDateTime getLast_check()
-    {
-        return  last_check;
+    public OffsetDateTime getLast_check() {
+        return last_check;
     }
 }
