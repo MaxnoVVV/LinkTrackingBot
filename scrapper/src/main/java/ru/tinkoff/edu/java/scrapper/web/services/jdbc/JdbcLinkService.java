@@ -20,14 +20,15 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @Slf4j
-@Service("linkService")
-public class JdbcLinkService  implements LinkService {
+public class JdbcLinkService implements LinkService {
 
-    @Autowired
     Parser parser;
-    @Autowired
     JdbcLinkRepository repository;
 
+    public JdbcLinkService(Parser parser, JdbcLinkRepository repository) {
+        this.parser = parser;
+        this.repository = repository;
+    }
 
     @Override
     public int update() {
@@ -41,21 +42,19 @@ public class JdbcLinkService  implements LinkService {
 
             ParseResult result = parser.parse(uri.toString());
 
-            if(result == null || repository.findAll().stream().anyMatch(l -> l.getLink().equals(uri.toString()) && l.tracking_user() == tgChatId))
-            {
+            if (result == null || repository.findAll().stream().anyMatch(l -> l.getLink().equals(uri.toString()) && l.tracking_user() == tgChatId)) {
                 log.warn("link " + uri.toString() + " exists or incorrect");
                 return new ResponseEntity<>(new ApiErrorResponse("Link format error",
                         "400",
                         "Wrong link format",
                         "Wrong link format",
-                        null),HttpStatus.BAD_REQUEST);
+                        null), HttpStatus.BAD_REQUEST);
             }
 
 
             int addedNumber = repository.add(tgChatId, uri.toString());
 
-            if(addedNumber != 0)
-            {
+            if (addedNumber != 0) {
                 var res = new LinkResponse(repository.findAll().stream().filter(u -> u.getLink().equals(uri.toString()) && u.tracking_user() == tgChatId).findFirst().get().link_id(), uri.toString());
                 log.info("link " + uri.toString() + " success added");
                 return new ResponseEntity<>(res, HttpStatus.OK);
@@ -66,18 +65,16 @@ public class JdbcLinkService  implements LinkService {
                     "400",
                     "no links added",
                     "no links added",
-                    null),HttpStatus.BAD_REQUEST);
+                    null), HttpStatus.BAD_REQUEST);
 
 
-        }
-        catch(DataAccessException e)
-        {
+        } catch (DataAccessException e) {
             log.error("catched exception in add service method");
             return new ResponseEntity<>(new ApiErrorResponse("error",
                     "400",
                     e.toString(),
                     e.getMessage(),
-                    Arrays.stream(e.getStackTrace()).map(s -> s.toString()).toArray(String[]::new)),HttpStatus.BAD_REQUEST);
+                    Arrays.stream(e.getStackTrace()).map(s -> s.toString()).toArray(String[]::new)), HttpStatus.BAD_REQUEST);
         }
 
 
@@ -85,42 +82,31 @@ public class JdbcLinkService  implements LinkService {
 
     @Override
     public ResponseEntity<?> remove(long tgChatId, URI uri) {
-        log.info("deleting " + tgChatId +  " " + uri.toString());
-        try
-        {
+        log.info("deleting " + tgChatId + " " + uri.toString());
+        try {
             var link_id = repository.findAll().stream().filter(u -> u.getLink().equals(uri.toString())).findFirst().get().link_id();
-            int number = repository.delete(tgChatId,uri.toString());
+            int number = repository.delete(tgChatId, uri.toString());
             log.info("found " + number + " link in db");
-            if(number == 0)
-            {
-                return new ResponseEntity<>(new ApiErrorResponse("error","404","No such link","error",null),HttpStatus.OK);
+            if (number == 0) {
+                return new ResponseEntity<>(new ApiErrorResponse("error", "404", "No such link", "error", null), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new LinkResponse(link_id, uri.toString()), HttpStatus.OK);
             }
-            else
-            {
-                return new ResponseEntity<>(new LinkResponse(link_id,uri.toString()),HttpStatus.OK);
-            }
-        }
-        catch (NoSuchElementException ex)
-        {
-            return new ResponseEntity<>(new ApiErrorResponse("error","404","No such link","error",null),HttpStatus.BAD_REQUEST);
-        }
-        catch(DataAccessException e)
-        {
-            return new ResponseEntity<>(new ApiErrorResponse("error","400",e.toString(),e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)),HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(new ApiErrorResponse("error", "404", "No such link", "error", null), HttpStatus.BAD_REQUEST);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(new ApiErrorResponse("error", "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.BAD_REQUEST);
         }
     }
 
     @Override
     public ResponseEntity<?> listAll(long tgChatId) {
 
-        try
-        {
-            var result = repository.findAll().stream().filter(u -> u.tracking_user() == tgChatId).map(u -> new LinkResponse(u.link_id(),u.getLink())).toArray(LinkResponse[]::new);
-            return new ResponseEntity<>(new ListLinksResponse(result.length,result),HttpStatus.OK);
-        }
-        catch(DataAccessException e)
-        {
-            return new ResponseEntity<>(new ApiErrorResponse("error","400",e.toString(),e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)),HttpStatus.BAD_REQUEST);
+        try {
+            var result = repository.findAll().stream().filter(u -> u.tracking_user() == tgChatId).map(u -> new LinkResponse(u.link_id(), u.getLink())).toArray(LinkResponse[]::new);
+            return new ResponseEntity<>(new ListLinksResponse(result.length, result), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(new ApiErrorResponse("error", "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.BAD_REQUEST);
         }
     }
 }

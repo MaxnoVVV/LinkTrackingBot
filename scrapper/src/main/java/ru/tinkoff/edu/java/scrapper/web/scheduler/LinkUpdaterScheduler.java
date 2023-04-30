@@ -48,67 +48,48 @@ public class LinkUpdaterScheduler {
     Parser parser;
 
 
-
     List<Link> links;
 
     @Scheduled(fixedDelayString = "#{@schedulerIntervalMs}")
     public void update() {
         log.info("update");
-        try
-        {
-             links = jdbcLinkRepository.findAll();
-             links = links.stream().filter(l -> Duration.between(l.getLast_check(),OffsetDateTime.now(ZoneOffset.UTC)).toMinutes() > 15).toList();
-             for(Link link : links)
-             {
-                 ParseResult result = parser.parse(link.getLink());
-                 ResponseEntity clientResponse = null;
-                 if(result instanceof StackOverFlowResult)
-                 {
-                     Item[] response = stackOverFlowWebClient.getAnswers(((StackOverFlowResult)result).id()).getItems();
-                     for(Item item : response)
-                     {
-                        if(item.getCreation_date().isAfter(link.getLast_check()))
-                        {
-                            clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),"Появился новый ответ на " + link.getLink(),new long[] {link.tracking_user()}));
+        try {
+            links = jdbcLinkRepository.findAll();
+            links = links.stream().filter(l -> Duration.between(l.getLast_check(), OffsetDateTime.now(ZoneOffset.UTC)).toMinutes() > 15).toList();
+            for (Link link : links) {
+                ParseResult result = parser.parse(link.getLink());
+                ResponseEntity clientResponse = null;
+                if (result instanceof StackOverFlowResult) {
+                    Item[] response = stackOverFlowWebClient.getAnswers(((StackOverFlowResult) result).id()).getItems();
+                    for (Item item : response) {
+                        if (item.getCreation_date().isAfter(link.getLast_check())) {
+                            clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++, link.getLink(), "Появился новый ответ на " + link.getLink(), new long[]{link.tracking_user()}));
                         }
-                     }
-                 }
-                 else
-                 {
-                    List<CommonEvent> events = gitHubWebClient.getInfo(((GitHubResult) result).name(),((GitHubResult) result).repository());
-                    for(CommonEvent event : events)
-                    {
-                        if(event.getOffsetDataTime().isAfter(link.getLast_check()))
-                        {
+                    }
+                } else {
+                    List<CommonEvent> events = gitHubWebClient.getInfo(((GitHubResult) result).name(), ((GitHubResult) result).repository());
+                    for (CommonEvent event : events) {
+                        if (event.getOffsetDataTime().isAfter(link.getLast_check())) {
                             String description = null;
-                            if(event.getType().equals("CreateEvent"))
-                            {
+                            if (event.getType().equals("CreateEvent")) {
                                 description = "В репозитории появился новый " + event.getPayload().get("ref_type") + "\r\n" + link.getLink();
-                            }
-                            else if(event.getType().equals("PushEvent"))
-                            {
+                            } else if (event.getType().equals("PushEvent")) {
                                 description = "В репозитории появился новый push\r\n" + link.getLink();
-                            }
-                            else if(event.getType().equals("PullRequestEvent"))
-                            {
+                            } else if (event.getType().equals("PullRequestEvent")) {
                                 description = "В репозитории появился новый pull request\r\n" + link.getLink();
                             }
-                            if(description != null)
-                            {
-                                clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++,link.getLink(),description,new long[]{link.tracking_user()}));
+                            if (description != null) {
+                                clientResponse = botClient.sendUpdate(new LinkUpdateRequest(id++, link.getLink(), description, new long[]{link.tracking_user()}));
                             }
                         }
                     }
-                 }
-                 if(clientResponse == null || (clientResponse != null && clientResponse.getStatusCode().is2xxSuccessful()))
-                 {
-                     jdbcLinkRepository.update(link.tracking_user(),link.getLink());
-                 }
+                }
+                if (clientResponse == null || (clientResponse != null && clientResponse.getStatusCode().is2xxSuccessful())) {
+                    jdbcLinkRepository.update(link.tracking_user(), link.getLink());
+                }
 
-             }
-        }
-        catch(DataAccessException e)
-        {
+            }
+        } catch (DataAccessException e) {
             log.error(e.toString());
             log.error(e.getMessage());
         }
