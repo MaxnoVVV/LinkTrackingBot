@@ -1,9 +1,10 @@
-package ru.tinkoff.edu.java.scrapper.web.repository;
+package ru.tinkoff.edu.java.scrapper.web.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.User;
+import ru.tinkoff.edu.java.scrapper.web.repository.UserMapper;
 
 import java.util.List;
 

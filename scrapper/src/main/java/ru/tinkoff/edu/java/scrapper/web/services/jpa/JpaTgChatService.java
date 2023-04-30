@@ -6,8 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.web.entity.User;
-import ru.tinkoff.edu.java.scrapper.web.repository.JpaLinkRepository;
-import ru.tinkoff.edu.java.scrapper.web.repository.JpaUserRepository;
+import ru.tinkoff.edu.java.scrapper.web.repository.jpa.JpaUserRepository;
 import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
 
 import java.util.Arrays;
@@ -15,7 +14,7 @@ import java.util.Arrays;
 @Slf4j
 public class JpaTgChatService implements TgChatService {
 
-    JpaUserRepository repository;
+    private JpaUserRepository repository;
 
     public JpaTgChatService(JpaUserRepository repository) {
         this.repository = repository;

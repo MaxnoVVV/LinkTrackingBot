@@ -1,18 +1,15 @@
 package ru.tinkoff.edu.java.scrapper.web.services.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.ParseResult;
 import ru.tinkoff.edu.java.Parser;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
-import ru.tinkoff.edu.java.scrapper.web.repository.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
 
 import java.net.URI;
@@ -22,8 +19,8 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class JdbcLinkService implements LinkService {
 
-    Parser parser;
-    JdbcLinkRepository repository;
+    private Parser parser;
+    private JdbcLinkRepository repository;
 
     public JdbcLinkService(Parser parser, JdbcLinkRepository repository) {
         this.parser = parser;

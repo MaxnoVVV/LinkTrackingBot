@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 import ru.tinkoff.edu.java.scrapper.configuration.DbConfig;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.Link;
-import ru.tinkoff.edu.java.scrapper.web.repository.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcLinkRepository;
 
 import java.util.List;
 

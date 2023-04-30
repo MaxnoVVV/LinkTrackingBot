@@ -2,13 +2,11 @@ package ru.tinkoff.edu.java.testing;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,11 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.Link;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.User;
-import ru.tinkoff.edu.java.scrapper.web.repository.JdbcLinkRepository;
-import ru.tinkoff.edu.java.scrapper.web.repository.JdbcUserRepository;
+import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcLinkRepository;
+import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcUserRepository;
 import ru.tinkoff.edu.java.testing.configuration.IntegrationTestsConfiguration;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 
 

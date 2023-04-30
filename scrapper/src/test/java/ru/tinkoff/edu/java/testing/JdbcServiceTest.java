@@ -36,7 +36,7 @@ public class JdbcServiceTest extends IntegrationEnvironment{
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-
+    //сделать несколько маленьких
     @Test
     public void Tests()
         {

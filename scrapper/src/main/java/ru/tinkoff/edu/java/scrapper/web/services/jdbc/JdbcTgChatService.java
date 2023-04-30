@@ -1,14 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.web.services.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
-import ru.tinkoff.edu.java.scrapper.web.repository.JdbcUserRepository;
+import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcUserRepository;
 import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
 
 import java.util.Arrays;
@@ -16,7 +13,7 @@ import java.util.Arrays;
 
 @Slf4j
 public class JdbcTgChatService implements TgChatService {
-    JdbcUserRepository repository;
+    private JdbcUserRepository repository;
 
     public JdbcTgChatService(JdbcUserRepository repository) {
         this.repository = repository;

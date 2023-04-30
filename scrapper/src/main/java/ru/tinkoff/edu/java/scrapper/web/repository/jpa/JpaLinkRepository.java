@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.repository;
+package ru.tinkoff.edu.java.scrapper.web.repository.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

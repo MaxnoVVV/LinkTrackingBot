@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.web.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,17 +17,12 @@ import ru.tinkoff.edu.java.scrapper.web.dto.clients.Item;
 import ru.tinkoff.edu.java.scrapper.web.dto.clients.events.CommonEvent;
 import ru.tinkoff.edu.java.scrapper.web.dto.forclient.dto.LinkUpdateRequest;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.Link;
-import ru.tinkoff.edu.java.scrapper.web.repository.JdbcLinkRepository;
-import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
+import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcLinkRepository;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -71,7 +65,7 @@ public class LinkUpdaterScheduler {
                     for (CommonEvent event : events) {
                         if (event.getOffsetDataTime().isAfter(link.getLast_check())) {
                             String description = null;
-                            if (event.getType().equals("CreateEvent")) {
+                            if (event.getType().equals("CreateEvent")) {    //switch
                                 description = "В репозитории появился новый " + event.getPayload().get("ref_type") + "\r\n" + link.getLink();
                             } else if (event.getType().equals("PushEvent")) {
                                 description = "В репозитории появился новый push\r\n" + link.getLink();

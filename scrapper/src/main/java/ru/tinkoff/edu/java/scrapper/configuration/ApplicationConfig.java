@@ -20,4 +20,4 @@ import java.time.Duration;
 public record ApplicationConfig(@NotNull String test,Scheduler scheduler) {
 
 }
-record Scheduler(Duration interval) {}
+record Scheduler(Duration interval) {}  

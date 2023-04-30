@@ -1,9 +1,10 @@
-package ru.tinkoff.edu.java.scrapper.web.repository;
+package ru.tinkoff.edu.java.scrapper.web.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.Link;
+import ru.tinkoff.edu.java.scrapper.web.repository.LinkMapper;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

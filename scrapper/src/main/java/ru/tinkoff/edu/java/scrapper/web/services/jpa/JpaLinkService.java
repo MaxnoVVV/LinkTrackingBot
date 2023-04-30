@@ -10,7 +10,7 @@ import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.web.entity.Link;
-import ru.tinkoff.edu.java.scrapper.web.repository.JpaLinkRepository;
+import ru.tinkoff.edu.java.scrapper.web.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
 
 import java.net.URI;
@@ -18,12 +18,11 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 public class JpaLinkService implements LinkService {
-    Parser parser;
-    JpaLinkRepository repository;
+    private Parser parser;
+    private JpaLinkRepository repository;
 
     public JpaLinkService(JpaLinkRepository repository, Parser parser) {
         this.repository = repository;

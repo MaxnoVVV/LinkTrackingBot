@@ -44,7 +44,7 @@ public class JpaServiceTest extends IntegrationEnvironment {
 
     @Autowired
     TgChatService tgChatService;
-
+    //переделать
     @Test
     public void tests() {
         String url1 = "https://stackoverflow.com/questions/32269192/spring-no-entitymanager-with-actual-transaction-available-for-current-thread";
