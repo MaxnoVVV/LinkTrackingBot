@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.services.jpa;
+package ru.tinkoff.edu.java.scrapper.web.service.jpa;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.web.entity.User;
 import ru.tinkoff.edu.java.scrapper.web.repository.jpa.JpaUserRepository;
-import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.TgChatService;
 
 import java.util.Arrays;
 

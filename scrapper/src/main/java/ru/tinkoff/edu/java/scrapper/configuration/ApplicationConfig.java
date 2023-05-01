@@ -17,8 +17,7 @@ import java.time.Duration;
 
 @Validated
 @ConfigurationProperties(prefix = "scrapper", ignoreUnknownFields = false)
-public record ApplicationConfig(@NotNull String test,Scheduler scheduler,RabbitMq rabbitmq,AccessType databaseAccessType) {
-
+public record ApplicationConfig(@NotNull String test,Scheduler scheduler,RabbitMq rabbitmq,AccessType databaseAccessType,boolean useQueue) {
 }
 enum AccessType {
     JDBC, JPA

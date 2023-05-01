@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.services.jpa;
+package ru.tinkoff.edu.java.scrapper.web.service.jpa;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +11,14 @@ import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.web.entity.Link;
 import ru.tinkoff.edu.java.scrapper.web.repository.jpa.JpaLinkRepository;
-import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
+import ru.tinkoff.edu.java.scrapper.web.service.LinkService;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class JpaLinkService implements LinkService {
@@ -31,8 +32,13 @@ public class JpaLinkService implements LinkService {
 
 
     @Override
-    public int update() {
-        return 0;
+    public int update(long tgChatId,String link) {
+        List<Link> links = repository.findByLinkAndTracking_user(link,tgChatId);
+        if(links.isEmpty()) return 0;
+        Link link_ = links.get(0);
+        link_.setLast_check(OffsetDateTime.now(ZoneOffset.UTC));
+        repository.save(link_);
+        return 1;
     }
 
     @Override
@@ -95,5 +101,10 @@ public class JpaLinkService implements LinkService {
             return new ResponseEntity<>(new ApiErrorResponse(e.getMessage(), "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    public List<ru.tinkoff.edu.java.scrapper.web.dto.repository.Link> findAll()
+    {
+        return repository.findAll().stream().map(element -> new ru.tinkoff.edu.java.scrapper.web.dto.repository.Link(element.getLink_id(),element.getLink(),element.getTrackinguser(),element.getLast_check())).collect(Collectors.toList());
     }
 }

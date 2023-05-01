@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.tinkoff.edu.java.Parser;
 import ru.tinkoff.edu.java.scrapper.web.repository.jpa.JpaLinkRepository;
 import ru.tinkoff.edu.java.scrapper.web.repository.jpa.JpaUserRepository;
-import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
-import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
-import ru.tinkoff.edu.java.scrapper.web.services.jpa.JpaLinkService;
-import ru.tinkoff.edu.java.scrapper.web.services.jpa.JpaTgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.web.service.TgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.jpa.JpaLinkService;
+import ru.tinkoff.edu.java.scrapper.web.service.jpa.JpaTgChatService;
 
 @Configuration
 @ConditionalOnProperty(prefix = "scrapper",name = "database-access-type",havingValue = "jpa")

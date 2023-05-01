@@ -14,10 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.User;
-import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
-import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
-import ru.tinkoff.edu.java.scrapper.web.services.jdbc.JdbcLinkService;
-import ru.tinkoff.edu.java.scrapper.web.services.jdbc.JdbcTgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.web.service.TgChatService;
 import ru.tinkoff.edu.java.testing.configuration.IntegrationTestsConfiguration;
 
 import java.net.URI;

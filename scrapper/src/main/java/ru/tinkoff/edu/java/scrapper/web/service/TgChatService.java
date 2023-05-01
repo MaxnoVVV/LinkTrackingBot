@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.services;
+package ru.tinkoff.edu.java.scrapper.web.service;
 
 import org.springframework.http.ResponseEntity;
 

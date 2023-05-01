@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.services.jdbc;
+package ru.tinkoff.edu.java.scrapper.web.service.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcUserRepository;
-import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.TgChatService;
 
 import java.util.Arrays;
 

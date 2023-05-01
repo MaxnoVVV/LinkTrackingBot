@@ -1,11 +1,11 @@
-package ru.tinkoff.edu.java.scrapper.web.controllers;
+package ru.tinkoff.edu.java.scrapper.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.TgChatService;
 
 @RestController
 @RequestMapping(value = "tg-chat/{id}")

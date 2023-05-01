@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import ru.tinkoff.edu.java.Parser;
 import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcUserRepository;
-import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
-import ru.tinkoff.edu.java.scrapper.web.services.TgChatService;
-import ru.tinkoff.edu.java.scrapper.web.services.jdbc.JdbcLinkService;
-import ru.tinkoff.edu.java.scrapper.web.services.jdbc.JdbcTgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.web.service.TgChatService;
+import ru.tinkoff.edu.java.scrapper.web.service.jdbc.JdbcLinkService;
+import ru.tinkoff.edu.java.scrapper.web.service.jdbc.JdbcTgChatService;
 
 @Configuration
 @ConditionalOnProperty(prefix = "scrapper",name = "database-access-type",havingValue = "jdbc")

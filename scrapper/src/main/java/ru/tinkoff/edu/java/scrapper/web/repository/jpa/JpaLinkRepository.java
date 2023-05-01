@@ -17,5 +17,6 @@ public interface JpaLinkRepository extends JpaRepository<Link, Long> {
     @Query("SELECT l FROM Link l WHERE l.trackinguser = ?1")
     List<Link> findAllByTracking_user(long tracking_user);
 
+
     void deleteAllByLinkAndTrackinguser(String link, long tracking_user);
 }

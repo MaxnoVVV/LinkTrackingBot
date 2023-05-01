@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.controllers;
+package ru.tinkoff.edu.java.scrapper.web.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

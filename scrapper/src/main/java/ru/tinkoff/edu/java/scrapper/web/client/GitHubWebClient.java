@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.clients;
+package ru.tinkoff.edu.java.scrapper.web.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;

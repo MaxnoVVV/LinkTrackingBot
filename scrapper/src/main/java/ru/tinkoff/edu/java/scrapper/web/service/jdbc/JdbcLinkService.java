@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.web.services.jdbc;
+package ru.tinkoff.edu.java.scrapper.web.service.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -9,11 +9,13 @@ import ru.tinkoff.edu.java.Parser;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
+import ru.tinkoff.edu.java.scrapper.web.dto.repository.Link;
 import ru.tinkoff.edu.java.scrapper.web.repository.jdbc.JdbcLinkRepository;
-import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
+import ru.tinkoff.edu.java.scrapper.web.service.LinkService;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -28,8 +30,8 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public int update() {
-        return 0;
+    public int update(long tgChatId,String link) {
+        return repository.update(tgChatId,link);
     }
 
     @Override
@@ -105,5 +107,10 @@ public class JdbcLinkService implements LinkService {
         } catch (DataAccessException e) {
             return new ResponseEntity<>(new ApiErrorResponse("error", "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    public List<Link> findAll()
+    {
+        return repository.findAll();
     }
 }
