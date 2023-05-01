@@ -12,7 +12,7 @@ import ru.tinkoff.edu.java.scrapper.web.services.jdbc.JdbcLinkService;
 import ru.tinkoff.edu.java.scrapper.web.services.jdbc.JdbcTgChatService;
 
 @Configuration
-@ConditionalOnProperty(prefix = "app",name = "database-access-type",havingValue = "jdbc")
+@ConditionalOnProperty(prefix = "scrapper",name = "database-access-type",havingValue = "jdbc")
 public class JdbcAccessConfiguration {
     @Bean
     public JdbcLinkRepository linkRepository()

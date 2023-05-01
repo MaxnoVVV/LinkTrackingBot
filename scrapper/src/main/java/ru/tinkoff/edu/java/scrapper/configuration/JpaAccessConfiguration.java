@@ -14,7 +14,7 @@ import ru.tinkoff.edu.java.scrapper.web.services.jpa.JpaLinkService;
 import ru.tinkoff.edu.java.scrapper.web.services.jpa.JpaTgChatService;
 
 @Configuration
-@ConditionalOnProperty(prefix = "app",name = "database-access-type",havingValue = "jpa")
+@ConditionalOnProperty(prefix = "scrapper",name = "database-access-type",havingValue = "jpa")
 @EnableJpaRepositories(basePackages = "ru.tinkoff.edu.java.scrapper.web.repository")
 @Import(ParserConfig.class)
 public class JpaAccessConfiguration

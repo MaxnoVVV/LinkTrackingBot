@@ -16,8 +16,16 @@ import ru.tinkoff.edu.java.StackOverFlowParser;
 import java.time.Duration;
 
 @Validated
-@ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-public record ApplicationConfig(@NotNull String test,Scheduler scheduler) {
+@ConfigurationProperties(prefix = "scrapper", ignoreUnknownFields = false)
+public record ApplicationConfig(@NotNull String test,Scheduler scheduler,RabbitMq rabbitmq,AccessType databaseAccessType) {
 
 }
-record Scheduler(Duration interval) {}  
+enum AccessType {
+    JDBC, JPA
+}
+record Scheduler(Duration interval) {}
+record Queue(String name) {};
+record Exchange(String name) {};
+record Binding(String routingKey){};
+record RabbitMq(Queue queue,Exchange exchange, Binding binding) {};
+

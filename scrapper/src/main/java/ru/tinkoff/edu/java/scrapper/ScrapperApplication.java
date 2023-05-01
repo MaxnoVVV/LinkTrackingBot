@@ -16,7 +16,7 @@ import java.util.List;
 @SpringBootApplication
 @EnableConfigurationProperties(ApplicationConfig.class)
 @Import(DbConfig.class)
-@EnableScheduling
+//@EnableScheduling
 public class ScrapperApplication {
 
     @Autowired
@@ -25,7 +25,5 @@ public class ScrapperApplication {
         var ctx = SpringApplication.run(ScrapperApplication.class, args);
         ApplicationConfig config = ctx.getBean(ApplicationConfig.class);
         System.out.println(config);
-        List<Link> list = jdbcLinkRepository.findAll();
-        System.out.println(list.size());
     }
 }
