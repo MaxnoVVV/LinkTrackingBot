@@ -1,21 +1,21 @@
-package ru.tinkoff.edu.java.scrapper.configuration;
+package ru.tinkoff.edu.java.bot.configuration;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.ClassMapper;
+import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.tinkoff.edu.java.scrapper.web.rabbitmq.service.ScrapperQueueProducer;
-import ru.tinkoff.edu.java.scrapper.web.service.notificator.RabbitMqService;
-import ru.tinkoff.edu.java.scrapper.web.service.notificator.SendUpdatesService;
+import ru.tinkoff.edu.java.bot.web.dto.LinkUpdateRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
-@ConditionalOnProperty(prefix = "scrapper",name="use-queue",havingValue = "true")
 public class RabbitMQConfiguration {
     @Bean
     public String queueName(ApplicationConfig config)
@@ -41,10 +41,11 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
+    public MessageConverter jsonMessageConverter(ClassMapper classMapper) {
+        Jackson2JsonMessageConverter jsonMessageConverter = new Jackson2JsonMessageConverter();
+        jsonMessageConverter.setClassMapper(classMapper);
+        return jsonMessageConverter;
     }
-
 
     @Bean
     public DirectExchange exchange(ApplicationConfig config)
@@ -59,21 +60,32 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(org.springframework.amqp.rabbit.connection.ConnectionFactory connectionFactory)
+    public ClassMapper classMapper()
     {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());
-        return rabbitTemplate;
+        Map<String,Class<?>> mappings = new HashMap<>();
+        mappings.put("ru.tinkoff.edu.java.scrapper.web.dto.forclient.dto.LinkUpdateRequest", LinkUpdateRequest.class);
+
+        DefaultClassMapper classMapper = new DefaultClassMapper();
+        classMapper.setTrustedPackages("ru.tinkoff.edu.java.bot.web.dto.*");
+        classMapper.setIdClassMapping(mappings);
+        return classMapper;
     }
 
     @Bean
-    public SendUpdatesService sendUpdatesService(ScrapperQueueProducer scrapperQueueProducer)
+    public Queue dlq(ApplicationConfig config)
     {
-        return new RabbitMqService(scrapperQueueProducer);
+        return new Queue(queueName(config) + ".dlq");
     }
 
+    @Bean
+    public DirectExchange dlx(ApplicationConfig config)
+    {
+        return  new DirectExchange(exchangeName(config) + ".dlq");
+    }
 
-
-
-
+    @Bean
+    public Binding dlq_binding(ApplicationConfig config)
+    {
+        return BindingBuilder.bind(dlq(config)).to(dlx(config)).with(routingKey(config));
+    }
 }

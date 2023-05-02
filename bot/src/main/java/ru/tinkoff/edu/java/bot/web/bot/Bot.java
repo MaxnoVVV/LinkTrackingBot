@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.configuration.BotConfig;
 import ru.tinkoff.edu.java.bot.web.bot.commands.*;
 import ru.tinkoff.edu.java.bot.web.client.ScrapperClient;
+import ru.tinkoff.edu.java.bot.web.dto.LinkUpdateRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,12 +25,13 @@ import java.util.List;
 @Slf4j
 @Component
 @Import(BotConfig.class)
+@RequiredArgsConstructor
 public class Bot implements AutoCloseable {
-    @Autowired
-    private TelegramBot bot;
 
-    @Autowired
-    private  Command commandProcessor;
+    private final TelegramBot bot;
+
+
+    private  final Command commandProcessor;
 
     public void addCommands() //bonus Task
     {
@@ -56,10 +59,24 @@ public class Bot implements AutoCloseable {
         });
     }
 
-    public void receiveUpdate(long tgChatId,String url,String description)
+    public boolean receiveUpdate(LinkUpdateRequest Update)
     {
-        SendMessage message = new SendMessage(tgChatId,description);
-        bot.execute(message);
+        log.info("new update" + Update.toString());
+        long[] ids = Update.thChatIds();
+        String description = Update.description();
+        if(description == null || description.isEmpty() || ids == null)
+        {
+            return false;
+        }
+        else
+        {
+            for(long id : ids)
+            {
+                SendMessage message = new SendMessage(ids[0],description);
+                bot.execute(message);
+            }
+        }
+        return true;
     }
     @Override
     public void close() throws Exception {

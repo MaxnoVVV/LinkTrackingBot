@@ -1,4 +1,7 @@
 package ru.tinkoff.edu.java.bot.web.dto;
 
-public record LinkUpdateRequest(int id, String url, String description, int[] thChatIds) {
+import lombok.ToString;
+
+
+public record LinkUpdateRequest(int id, String url, String description, long[] thChatIds) {
 }

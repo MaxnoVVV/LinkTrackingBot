@@ -27,8 +27,5 @@ public class ScrapperApplication {
         var ctx = SpringApplication.run(ScrapperApplication.class, args);
         ApplicationConfig config = ctx.getBean(ApplicationConfig.class);
         System.out.println(config);
-        ScrapperQueueProducer scrapperQueueProducer = (ScrapperQueueProducer) ctx.getBean("scrapperQueueProducer");
-        scrapperQueueProducer.send(new LinkUpdateRequest(1,"pornhub.com","hz",new long[] {1,2})) ;
-        System.out.println("sent");
     }
 }
