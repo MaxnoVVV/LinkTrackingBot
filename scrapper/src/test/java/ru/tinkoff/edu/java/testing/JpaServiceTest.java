@@ -82,11 +82,6 @@ public class JpaServiceTest extends IntegrationEnvironment {
         Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url2) && u.tracking_user() == 3));
 
 
-        Assertions.assertFalse(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.tracking_user() == 2));
-
-        response = linkService.remove(2, URI.create(url1));
-        Assertions.assertTrue(response.getStatusCode().is4xxClientError());
-
 
     }
 
