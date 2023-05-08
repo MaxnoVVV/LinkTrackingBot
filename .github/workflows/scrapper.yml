@@ -1,7 +1,11 @@
 name: scrapper
 
 on: 
-  workflow_dispatch
+  push:
+    branches: ["main","hw9"]
+  pull_request:
+    branches: ["main","hw9"]
+  workflow_dispatch:
   
 jobs:
   build:
