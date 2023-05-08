@@ -16,5 +16,5 @@ steps:
     with:
       java-version: 17
 
-  - name: Check java version:
+  - name: Check java version
     run: java --version
