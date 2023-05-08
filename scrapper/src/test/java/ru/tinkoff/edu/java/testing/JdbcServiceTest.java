@@ -47,6 +47,7 @@ public class JdbcServiceTest extends IntegrationEnvironment{
     @Test
     public void Tests()
         {
+            jdbcTemplate.update("TRUNCATE links,users;");
             String gitHubLink = "https://github.com/MaxnoVVV/TinkoffBot/";
             String stackOverFlowLink = "https://stackoverflow.com/questions/54444726/spring-boot-test-doesnt-find-bean-from-sibling-package";
             String wrongLink = "https://mail.google.com/mail/u/0/#inbox";
