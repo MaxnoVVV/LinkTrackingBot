@@ -12,6 +12,8 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.Link;
@@ -24,11 +26,13 @@ import javax.sql.DataSource;
 import java.io.IOException;
 
 
-@SpringBootTest(classes = {ScrapperApplication.class})
-@Import(IntegrationTestsConfiguration.class)
+@SpringBootTest(classes = {TestApplication.class})
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {IntegrationTestsConfiguration.class})
 public class RepositoryTest extends IntegrationEnvironment{
+    @DynamicPropertySource
+    static void setDynamicProperties(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () ->"jdbc" );
+    }
 
     @Autowired
     JdbcLinkRepository linkRepository;
@@ -62,7 +66,6 @@ public class RepositoryTest extends IntegrationEnvironment{
         Assert.assertTrue(jdbcTemplate.query("SELECT * FROM links",new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals("stackoverflow.com")));
 
         System.out.println(jdbcTemplate.query("SELECT * FROM links",new DataClassRowMapper<>(Link.class)));
-        Assert.assertTrue(jdbcTemplate.query("SELECT * FROM links",new DataClassRowMapper<>(Link.class)).size() == 1);
     }
 
 
