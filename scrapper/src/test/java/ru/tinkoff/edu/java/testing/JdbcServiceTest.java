@@ -10,8 +10,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
+import ru.tinkoff.edu.java.scrapper.configuration.JdbcAccessConfiguration;
 import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.User;
 import ru.tinkoff.edu.java.scrapper.web.services.LinkService;
@@ -22,11 +25,15 @@ import ru.tinkoff.edu.java.testing.configuration.IntegrationTestsConfiguration;
 
 import java.net.URI;
 
-@SpringBootTest(classes = {ScrapperApplication.class})
-@Import(IntegrationTestsConfiguration.class)
+@SpringBootTest(classes = {TestApplication.class})
+@Import({IntegrationTestsConfiguration.class, JdbcAccessConfiguration.class})
 @RunWith(SpringRunner.class)
 public class JdbcServiceTest extends IntegrationEnvironment{
 
+    @DynamicPropertySource
+    static void setDynamicProperties(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () ->"jdbc" );
+    }
     @Autowired
     TgChatService tgChatService;
 

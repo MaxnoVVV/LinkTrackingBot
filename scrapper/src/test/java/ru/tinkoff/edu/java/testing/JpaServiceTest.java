@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.tinkoff.edu.java.scrapper.configuration.JpaAccessConfiguration;
 import ru.tinkoff.edu.java.scrapper.web.dto.repository.Link;
@@ -27,13 +29,14 @@ import javax.sql.DataSource;
 import java.net.URI;
 
 
-@SpringBootTest
+@SpringBootTest(classes = {TestApplication.class})
 @EntityScan("ru.tinkoff.edu.java.scrapper.web.entity")
 @RunWith(SpringRunner.class)
-@Import({IntegrationTestsConfiguration.class, JpaAccessConfiguration.class})
-@ContextConfiguration(classes = {JpaAccessConfiguration.class, IntegrationTestsConfiguration.class})
-@EnableAutoConfiguration
 public class JpaServiceTest extends IntegrationEnvironment {
+    @DynamicPropertySource
+    static void setDynamicProperties(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () ->"jpa" );
+    }
     @Autowired
     DataSource dataSource;
     @Autowired
