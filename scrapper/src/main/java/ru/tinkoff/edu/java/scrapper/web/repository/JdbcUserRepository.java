@@ -7,7 +7,7 @@ import ru.tinkoff.edu.java.scrapper.web.dto.repository.User;
 
 import java.util.List;
 
-@Repository("userRepository")
+@Repository
 public class JdbcUserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
