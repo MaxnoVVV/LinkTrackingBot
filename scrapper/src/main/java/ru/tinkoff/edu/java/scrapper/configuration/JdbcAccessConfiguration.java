@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.scrapper.configuration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import ru.tinkoff.edu.java.BaseParser;
 import ru.tinkoff.edu.java.Parser;
 import ru.tinkoff.edu.java.scrapper.web.repository.JdbcLinkRepository;
@@ -14,6 +15,7 @@ import ru.tinkoff.edu.java.scrapper.web.services.jdbc.JdbcTgChatService;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app",name = "database-access-type",havingValue = "jdbc")
+@Import(ParserConfig.class)
 public class JdbcAccessConfiguration {
     @Bean
     public JdbcLinkRepository linkRepository()
