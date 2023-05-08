@@ -1,20 +1,25 @@
-name: scrapper
-run-name: test
-on: workflow_dispatch
+name: bot
+on: 
+  push:
+    branches: ["main","hw9"]
+  pull_request:
+    branches: ["main","hw9"]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
         uses: actions/checkout@v3
-
-      - name: List files
-        run: ls -a
   
-      - name: Setup java 
+      - name: Setup java
         uses: actions/setup-java@v1.4.4
         with:
           java-version: 17
+          cache: 'maven'
 
       - name: Check java version
         run: java --version
+
+      - name: compile
+        run: mvn package -pl scrapper -am
