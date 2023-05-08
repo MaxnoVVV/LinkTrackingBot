@@ -10,10 +10,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import ru.tinkoff.edu.java.bot.web.bot.commands.*;
 import ru.tinkoff.edu.java.bot.web.client.ScrapperClient;
-import ru.tinkoff.edu.java.scrapper.web.dto.controllers.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.web.dto.controllers.ListLinksResponse;
+import ru.tinkoff.edu.java.bot.web.dto.clients.LinkResponse;
+import ru.tinkoff.edu.java.bot.web.dto.clients.ListLinksResponse;
+
 
 import static reactor.core.publisher.Mono.when;
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +44,7 @@ public class Tests {
         Mockito.when(message.chat()).thenReturn(chat);
         Mockito.when(chat.id()).thenReturn(1L);
         Mockito.when(message.text()).thenReturn("/list");
-        Mockito.when(client.getLinks(Mockito.anyLong())).thenReturn(new ListLinksResponse(2,new LinkResponse[]{new LinkResponse(1,link1),new LinkResponse(2,link2)}));
+        Mockito.when(client.getLinks(Mockito.anyLong())).thenReturn(new ResponseEntity(new ListLinksResponse(2,new LinkResponse[]{new LinkResponse(1,link1),new LinkResponse(2,link2)}),HttpStatus.OK) );
 
         Command command = Command.build(client, new HelpCommand(),new StartCommand(),new ListCommand(),new TrackCommand(),new UntrackCommand());
 
@@ -51,7 +54,7 @@ public class Tests {
 
         Assertions.assertEquals(((SuccessCommandResponse)request).text(),String.format("%s\n%s\n",link1,link2));
 
-        Mockito.when(client.getLinks(Mockito.anyLong())).thenReturn(new ListLinksResponse(0,null));
+        Mockito.when(client.getLinks(Mockito.anyLong())).thenReturn(new ResponseEntity(new ListLinksResponse(0,null),HttpStatus.OK));
         request = command.proccess(update);
 
         Assertions.assertEquals(((SuccessCommandResponse)request).text(),"Нет отслеживаемых ссылок");

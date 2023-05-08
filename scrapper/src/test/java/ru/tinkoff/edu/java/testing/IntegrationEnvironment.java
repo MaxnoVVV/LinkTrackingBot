@@ -11,14 +11,18 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.tinkoff.edu.java.scrapper.web.repository.JdbcLinkRepository;
 import ru.tinkoff.edu.java.testing.configuration.IntegrationTestsConfiguration;
 
 import java.io.IOException;
@@ -59,6 +63,13 @@ abstract class AbstractPostgresContaineraseTest
 @Import(IntegrationTestsConfiguration.class)
 public class IntegrationEnvironment extends AbstractPostgresContaineraseTest {
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+    @BeforeEach
+    public void cleanTables()
+    {
+        jdbcTemplate.update("TRUNCATE links,users;");
+    }
     @BeforeClass
     public static void init() throws IOException {
 

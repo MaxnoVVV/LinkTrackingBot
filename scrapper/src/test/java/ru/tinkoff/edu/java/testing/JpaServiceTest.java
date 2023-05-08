@@ -2,6 +2,7 @@ package ru.tinkoff.edu.java.testing;
 
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -33,6 +34,7 @@ import java.net.URI;
 @EntityScan("ru.tinkoff.edu.java.scrapper.web.entity")
 @RunWith(SpringRunner.class)
 public class JpaServiceTest extends IntegrationEnvironment {
+
     @DynamicPropertySource
     static void setDynamicProperties(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () ->"jpa" );
@@ -50,6 +52,7 @@ public class JpaServiceTest extends IntegrationEnvironment {
 
     @Test
     public void tests() {
+        jdbcTemplate.update("TRUNCATE links,users;");
         String url1 = "https://stackoverflow.com/questions/32269192/spring-no-entitymanager-with-actual-transaction-available-for-current-thread";
         String url2 = "https://github.com/MaxnoVVV/TinkoffBot/";
         Assertions.assertNotNull(dataSource);

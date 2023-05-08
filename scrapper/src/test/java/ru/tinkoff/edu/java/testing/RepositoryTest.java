@@ -3,6 +3,7 @@ package ru.tinkoff.edu.java.testing;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,9 +45,14 @@ public class RepositoryTest extends IntegrationEnvironment{
 
     @Autowired
     Environment env;
-
+    @BeforeEach
+    public void cleanTables()
+    {
+        jdbcTemplate.update("TRUNCATE links,users;");
+    }
     @Test
     public void  simpletest() throws IOException {
+        jdbcTemplate.update("TRUNCATE links,users;");
 
         userRepository.add(1);
         userRepository.add(2);
