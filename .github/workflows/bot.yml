@@ -12,7 +12,7 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v3
 
-       - name: Setup java
+      - name: Setup java
         uses: actions/setup-java@v1.4.4
         with:
           java-version: 17

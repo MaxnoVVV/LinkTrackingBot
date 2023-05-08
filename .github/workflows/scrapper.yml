@@ -1,23 +1,13 @@
-<<<<<<< HEAD
-name: bot
-=======
 name: scrapper
-
->>>>>>> 4849079e5479e3bfb1dc6ddfa2937609416e043d
 on: 
   push:
     branches: ["main","hw9"]
   pull_request:
     branches: ["main","hw9"]
   workflow_dispatch:
-<<<<<<< HEAD
-=======
-  
->>>>>>> 4849079e5479e3bfb1dc6ddfa2937609416e043d
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Clone repo
         uses: actions/checkout@v3
