@@ -12,6 +12,6 @@ public class LinkMapper implements RowMapper<Link> {
 
     @Override
     public Link mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Link(rs.getInt("link_id"), rs.getString("link"), rs.getInt("tracking_user"), OffsetDateTime.ofInstant(rs.getTimestamp("last_check").toInstant(), ZoneId.systemDefault()));
+        return new Link(rs.getInt("linkId"), rs.getString("link"), rs.getInt("trackingUser"), OffsetDateTime.ofInstant(rs.getTimestamp("lastCheck").toInstant(), ZoneId.systemDefault()));
     }
 }

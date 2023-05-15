@@ -19,13 +19,12 @@ import java.util.List;
 @SpringBootApplication
 @EnableConfigurationProperties(ApplicationConfig.class)
 @Import(DbConfig.class)
-//@EnableScheduling
+@EnableScheduling
 public class ScrapperApplication {
 
 
-    public static void main(String[] args) {
-        var ctx = SpringApplication.run(ScrapperApplication.class, args);
-        ApplicationConfig config = ctx.getBean(ApplicationConfig.class);
-        System.out.println(config);
-    }
+  public static void main(String[] args) {
+    var ctx = SpringApplication.run(ScrapperApplication.class, args);
+    ApplicationConfig config = ctx.getBean(ApplicationConfig.class);
+  }
 }

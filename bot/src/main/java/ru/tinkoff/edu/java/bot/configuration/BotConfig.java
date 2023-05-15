@@ -12,16 +12,16 @@ import ru.tinkoff.edu.java.bot.web.client.ScrapperClient;
 @RequiredArgsConstructor
 public class BotConfig {
 
-    private final ApplicationConfig config;
-    @Bean
-    public Command commandProccessor()
-    {
-        return  Command.build(new ScrapperClient(),new HelpCommand(),new ListCommand(),new StartCommand(),new TrackCommand(),new UntrackCommand());
-    }
+  private final ApplicationConfig config;
 
-    @Bean
-    public TelegramBot telegramBot()
-    {
-        return new TelegramBot(config.TOKEN());
-    }
+  @Bean
+  public Command commandProccessor() {
+    return Command.build(new ScrapperClient(), new HelpCommand(), new ListCommand(),
+        new StartCommand(), new TrackCommand(), new UntrackCommand());
+  }
+
+  @Bean
+  public TelegramBot telegramBot() {
+    return new TelegramBot(config.TOKEN());
+  }
 }

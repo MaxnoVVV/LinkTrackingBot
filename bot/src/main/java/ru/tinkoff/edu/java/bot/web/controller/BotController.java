@@ -15,13 +15,14 @@ import ru.tinkoff.edu.java.bot.web.service.UpdateService;
 @RestController
 @RequiredArgsConstructor
 public class BotController {
-    private final UpdateService updateService;
 
-    @PostMapping(value = "/updates")
-    @Operation(summary = "Отправить обновление")
-    public ResponseEntity<?> linkUpdate(@Valid @RequestBody LinkUpdateRequest request) {
-        log.info("got update");
-        updateService.proccessUpdate(request);
-        return ResponseEntity.ok().build();
-    }
+  private final UpdateService updateService;
+
+  @PostMapping(value = "/updates")
+  @Operation(summary = "Отправить обновление")
+  public ResponseEntity<?> linkUpdate(@Valid @RequestBody LinkUpdateRequest request) {
+    log.info("got update");
+    updateService.proccessUpdate(request);
+    return ResponseEntity.ok().build();
+  }
 }

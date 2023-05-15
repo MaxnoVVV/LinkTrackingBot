@@ -1,4 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,14 +18,11 @@ import java.time.Duration;
 
 @Validated
 @ConfigurationProperties(prefix = "scrapper", ignoreUnknownFields = false)
-public record ApplicationConfig(@NotNull String test,Scheduler scheduler,RabbitMq rabbitmq,AccessType databaseAccessType,boolean useQueue) {
-}
-enum AccessType {
-    JDBC, JPA
-}
-record Scheduler(Duration interval) {}
-record Queue(String name) {};
-record Exchange(String name) {};
-record Binding(String routingKey){};
-record RabbitMq(Queue queue,Exchange exchange, Binding binding) {};
+public record ApplicationConfig(@NotNull String test, Scheduler scheduler, RabbitMq rabbitmq,
+                                AccessType databaseAccessType, boolean useQueue) {
 
+}
+
+enum AccessType {
+  JDBC, JPA
+}

@@ -41,7 +41,7 @@ public class JdbcLinkService implements LinkService {
 
             ParseResult result = parser.parse(uri.toString());
 
-            if (result == null || repository.findAll().stream().anyMatch(l -> l.getLink().equals(uri.toString()) && l.tracking_user() == tgChatId)) {
+            if (result == null || repository.findAll().stream().anyMatch(l -> l.getLink().equals(uri.toString()) && l.trackingUser() == tgChatId)) {
                 log.warn("link " + uri.toString() + " exists or incorrect");
                 return new ResponseEntity<>(new ApiErrorResponse("Link format error",
                         "400",
@@ -54,7 +54,7 @@ public class JdbcLinkService implements LinkService {
             int addedNumber = repository.add(tgChatId, uri.toString());
 
             if (addedNumber != 0) {
-                var res = new LinkResponse(repository.findAll().stream().filter(u -> u.getLink().equals(uri.toString()) && u.tracking_user() == tgChatId).findFirst().get().link_id(), uri.toString());
+                var res = new LinkResponse(repository.findAll().stream().filter(u -> u.getLink().equals(uri.toString()) && u.trackingUser() == tgChatId).findFirst().get().linkId(), uri.toString());
                 log.info("link " + uri.toString() + " success added");
                 return new ResponseEntity<>(res, HttpStatus.OK);
             }
@@ -83,7 +83,7 @@ public class JdbcLinkService implements LinkService {
     public ResponseEntity<?> remove(long tgChatId, URI uri) {
         log.info("deleting " + tgChatId + " " + uri.toString());
         try {
-            var link_id = repository.findAll().stream().filter(u -> u.getLink().equals(uri.toString())).findFirst().get().link_id();
+            var link_id = repository.findAll().stream().filter(u -> u.getLink().equals(uri.toString())).findFirst().get().linkId();
             int number = repository.delete(tgChatId, uri.toString());
             log.info("found " + number + " link in db");
             if (number == 0) {
@@ -102,7 +102,7 @@ public class JdbcLinkService implements LinkService {
     public ResponseEntity<?> listAll(long tgChatId) {
 
         try {
-            var result = repository.findAll().stream().filter(u -> u.tracking_user() == tgChatId).map(u -> new LinkResponse(u.link_id(), u.getLink())).toArray(LinkResponse[]::new);
+            var result = repository.findAll().stream().filter(u -> u.trackingUser() == tgChatId).map(u -> new LinkResponse(u.linkId(), u.getLink())).toArray(LinkResponse[]::new);
             return new ResponseEntity<>(new ListLinksResponse(result.length, result), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(new ApiErrorResponse("error", "400", e.toString(), e.getMessage(), Arrays.stream(e.getStackTrace()).map(u -> u.toString()).toArray(String[]::new)), HttpStatus.BAD_REQUEST);

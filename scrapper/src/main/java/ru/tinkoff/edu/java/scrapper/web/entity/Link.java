@@ -17,10 +17,10 @@ public class Link {
 
     @Column(name = "link")
     private String link;
-    @Column(name = "tracking_user")
+    @Column(name = "trackingUser")
     private long trackinguser;
 
-    @Column(name = "last_check")
+    @Column(name = "lastCheck")
     private OffsetDateTime last_check;
 
 }

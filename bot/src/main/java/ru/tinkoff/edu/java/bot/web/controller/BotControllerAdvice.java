@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.tinkoff.edu.java.bot.web.dto.ApiErrorResponse;
 
 @RestControllerAdvice
-public class BotControllerAdvice  {
-    @ExceptionHandler({NullPointerException.class, MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(Exception ex) {
-        return new ResponseEntity<>(new ApiErrorResponse("error", "400", "MethodArgumentNotValidException", "error", new String[]{"error"}), HttpStatus.BAD_REQUEST);
-    }
+public class BotControllerAdvice {
+
+  @ExceptionHandler({NullPointerException.class, MethodArgumentNotValidException.class,
+      HttpMessageNotReadableException.class})
+  public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValidException(Exception ex) {
+    return new ResponseEntity<>(
+        new ApiErrorResponse("error", "400", "MethodArgumentNotValidException", "error",
+            new String[]{"error"}), HttpStatus.BAD_REQUEST);
+  }
 }

@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 public class SchedulerConfig {
-    @Bean
-    public long schedulerIntervalMs(ApplicationConfig config)
-    {
-        return config.scheduler().interval().toMillis();
-    }
+
+  @Bean
+  public long schedulerIntervalMs(ApplicationConfig config) {
+    return config.scheduler().interval().toMillis();
+  }
 
 }

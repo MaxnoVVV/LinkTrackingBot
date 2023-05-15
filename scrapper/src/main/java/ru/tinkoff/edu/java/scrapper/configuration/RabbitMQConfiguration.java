@@ -15,65 +15,50 @@ import ru.tinkoff.edu.java.scrapper.web.service.notificator.RabbitMqService;
 import ru.tinkoff.edu.java.scrapper.web.service.notificator.SendUpdatesService;
 
 @Configuration
-@ConditionalOnProperty(prefix = "scrapper",name="use-queue",havingValue = "true")
+@ConditionalOnProperty(prefix = "scrapper", name = "use-queue", havingValue = "true")
 public class RabbitMQConfiguration {
-    @Bean
-    public String queueName(ApplicationConfig config)
-    {
-        return config.rabbitmq().queue().name();
-    }
-
-    @Bean
-    public String exchangeName(ApplicationConfig config)
-    {
-        return config.rabbitmq().exchange().name();
-    }
-
-    @Bean
-    public String routingKey(ApplicationConfig config){return config.rabbitmq().binding().routingKey();}
-
-    @Bean
-    public Queue queue(ApplicationConfig config)
-    {
-        Queue queue = new Queue(queueName(config));
-        queue.addArgument("x-dead-letter-exchange",exchangeName(config) + ".dlq");
-        return queue;
-    }
-
-    @Bean
-    public MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
 
 
-    @Bean
-    public DirectExchange exchange(ApplicationConfig config)
-    {
-        return new DirectExchange(config.rabbitmq().exchange().name());
-    }
+  @Bean
+  public String routingKey(ApplicationConfig config) {
+    return config.rabbitmq().binding().routingKey();
+  }
 
-    @Bean
-    public Binding binding(ApplicationConfig config, Queue queue, DirectExchange exchange)
-    {
-        return BindingBuilder.bind(queue).to(exchange).with(config.rabbitmq().binding().routingKey());
-    }
+  @Bean
+  public Queue queue(ApplicationConfig config) {
+    Queue queue = new Queue(config.rabbitmq().queue().name());
+    queue.addArgument("x-dead-letter-exchange", config.rabbitmq().exchange().name() + ".dlq");
+    return queue;
+  }
 
-    @Bean
-    public RabbitTemplate rabbitTemplate(org.springframework.amqp.rabbit.connection.ConnectionFactory connectionFactory)
-    {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());
-        return rabbitTemplate;
-    }
-
-    @Bean
-    public SendUpdatesService sendUpdatesService(ScrapperQueueProducer scrapperQueueProducer)
-    {
-        return new RabbitMqService(scrapperQueueProducer);
-    }
+  @Bean
+  public MessageConverter jsonMessageConverter() {
+    return new Jackson2JsonMessageConverter();
+  }
 
 
+  @Bean
+  public DirectExchange exchange(ApplicationConfig config) {
+    return new DirectExchange(config.rabbitmq().exchange().name());
+  }
 
+  @Bean
+  public Binding binding(ApplicationConfig config, Queue queue, DirectExchange exchange) {
+    return BindingBuilder.bind(queue).to(exchange).with(config.rabbitmq().binding().routingKey());
+  }
+
+  @Bean
+  public RabbitTemplate rabbitTemplate(
+      org.springframework.amqp.rabbit.connection.ConnectionFactory connectionFactory) {
+    RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+    rabbitTemplate.setMessageConverter(jsonMessageConverter());
+    return rabbitTemplate;
+  }
+
+  @Bean
+  public SendUpdatesService sendUpdatesService(ScrapperQueueProducer scrapperQueueProducer) {
+    return new RabbitMqService(scrapperQueueProducer);
+  }
 
 
 }

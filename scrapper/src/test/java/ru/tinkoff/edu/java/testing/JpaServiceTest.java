@@ -77,11 +77,11 @@ public class JpaServiceTest extends IntegrationEnvironment {
         linkService.add(3, URI.create(url2));
 
         Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).size() == 2);
-        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.tracking_user() == 2));
-        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url2) && u.tracking_user() == 3));
+        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.trackingUser() == 2));
+        Assertions.assertTrue(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url2) && u.trackingUser() == 3));
 
 
-        Assertions.assertFalse(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.tracking_user() == 2));
+        Assertions.assertFalse(jdbcTemplate.query("SELECT * FROM links", new DataClassRowMapper<>(Link.class)).stream().anyMatch(u -> u.getLink().equals(url1) && u.trackingUser() == 2));
 
         response = linkService.remove(2, URI.create(url1));
         Assertions.assertTrue(response.getStatusCode().is4xxClientError());

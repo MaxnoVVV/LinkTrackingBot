@@ -12,28 +12,26 @@ import ru.tinkoff.edu.java.scrapper.web.service.jdbc.JdbcLinkService;
 import ru.tinkoff.edu.java.scrapper.web.service.jdbc.JdbcTgChatService;
 
 @Configuration
-@ConditionalOnProperty(prefix = "scrapper",name = "database-access-type",havingValue = "jdbc")
+@ConditionalOnProperty(prefix = "scrapper", name = "database-access-type", havingValue = "jdbc")
 public class JdbcAccessConfiguration {
-    @Bean
-    public JdbcLinkRepository linkRepository()
-    {
-        return new JdbcLinkRepository();
-    }
-    @Bean
-    public JdbcUserRepository userRepository()
-    {
-        return new JdbcUserRepository();
-    }
 
-    @Bean
-    public LinkService linkService(Parser parser, JdbcLinkRepository linkRepository)
-    {
-        return new JdbcLinkService(parser,linkRepository);
-    }
+  @Bean
+  public JdbcLinkRepository linkRepository() {
+    return new JdbcLinkRepository();
+  }
 
-    @Bean
-    public TgChatService tgChatService(JdbcUserRepository userRepository)
-    {
-        return new JdbcTgChatService(userRepository);
-    }
+  @Bean
+  public JdbcUserRepository userRepository() {
+    return new JdbcUserRepository();
+  }
+
+  @Bean
+  public LinkService linkService(Parser parser, JdbcLinkRepository linkRepository) {
+    return new JdbcLinkService(parser, linkRepository);
+  }
+
+  @Bean
+  public TgChatService tgChatService(JdbcUserRepository userRepository) {
+    return new JdbcTgChatService(userRepository);
+  }
 }

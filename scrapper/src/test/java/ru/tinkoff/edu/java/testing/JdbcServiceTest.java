@@ -23,63 +23,64 @@ import java.net.URI;
 @SpringBootTest(classes = {ScrapperApplication.class})
 @Import(IntegrationTestsConfiguration.class)
 @RunWith(SpringRunner.class)
-public class JdbcServiceTest extends IntegrationEnvironment{
+public class JdbcServiceTest extends IntegrationEnvironment {
 
-    @Autowired
-    TgChatService tgChatService;
+  @Autowired
+  TgChatService tgChatService;
 
-    @Autowired
-    LinkService linkService;
+  @Autowired
+  LinkService linkService;
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    //сделать несколько маленьких
-    @Test
-    public void Tests()
-        {
-            String gitHubLink = "https://github.com/MaxnoVVV/TinkoffBot/";
-            String stackOverFlowLink = "https://stackoverflow.com/questions/54444726/spring-boot-test-doesnt-find-bean-from-sibling-package";
-            String wrongLink = "https://mail.google.com/mail/u/0/#inbox";
-
-            ResponseEntity response = tgChatService.register(1);
-
-            Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
-            Assert.assertTrue(jdbcTemplate.query("SELECT * FROM users",new DataClassRowMapper<>(User.class)).stream().anyMatch(u -> u.id() == 1));
-
-            response = tgChatService.unregister(1);
-            Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
-            Assert.assertFalse(jdbcTemplate.query("SELECT * FROM users",new DataClassRowMapper<>(User.class)).stream().anyMatch(u -> u.id() == 1));
+  @Autowired
+  JdbcTemplate jdbcTemplate;
 
 
+  @Test
+  public void Tests() {
+    String gitHubLink = "https://github.com/MaxnoVVV/TinkoffBot/";
+    String stackOverFlowLink = "https://stackoverflow.com/questions/54444726/spring-boot-test-doesnt-find-bean-from-sibling-package";
+    String wrongLink = "https://mail.google.com/mail/u/0/#inbox";
 
-            response = tgChatService.unregister(1);
+    ResponseEntity response = tgChatService.register(1);
 
-            Assertions.assertTrue(response.getStatusCode().is4xxClientError());
+    Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
+    Assert.assertTrue(
+        jdbcTemplate.query("SELECT * FROM users", new DataClassRowMapper<>(User.class)).stream()
+            .anyMatch(u -> u.id() == 1));
 
-            response = tgChatService.register(1);
+    response = tgChatService.unregister(1);
+    Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
+    Assert.assertFalse(
+        jdbcTemplate.query("SELECT * FROM users", new DataClassRowMapper<>(User.class)).stream()
+            .anyMatch(u -> u.id() == 1));
 
-            response = linkService.add(1, URI.create(gitHubLink));
-            Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
+    response = tgChatService.unregister(1);
 
-            response = linkService.add(1,URI.create(stackOverFlowLink));
-            Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
+    Assertions.assertTrue(response.getStatusCode().is4xxClientError());
 
-            response = linkService.add(1,URI.create(wrongLink));
-            Assert.assertTrue(response.getStatusCode().is4xxClientError());
+    response = tgChatService.register(1);
 
-            response = linkService.listAll(1);
+    response = linkService.add(1, URI.create(gitHubLink));
+    Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
 
-            System.out.println(response.getBody());
+    response = linkService.add(1, URI.create(stackOverFlowLink));
+    Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
 
-            Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
-            Assertions.assertTrue(((ListLinksResponse)response.getBody()).links().length == 2);
+    response = linkService.add(1, URI.create(wrongLink));
+    Assert.assertTrue(response.getStatusCode().is4xxClientError());
 
-            response = linkService.remove(1,URI.create(stackOverFlowLink));
+    response = linkService.listAll(1);
 
-            response = linkService.listAll(1);
-            Assertions.assertTrue(((ListLinksResponse)response.getBody()).links().length == 1);
-        }
+    System.out.println(response.getBody());
+
+    Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
+    Assertions.assertTrue(((ListLinksResponse) response.getBody()).links().length == 2);
+
+    response = linkService.remove(1, URI.create(stackOverFlowLink));
+
+    response = linkService.listAll(1);
+    Assertions.assertTrue(((ListLinksResponse) response.getBody()).links().length == 1);
+  }
 
 
 }

@@ -14,21 +14,18 @@ import ru.tinkoff.edu.java.scrapper.web.service.jpa.JpaLinkService;
 import ru.tinkoff.edu.java.scrapper.web.service.jpa.JpaTgChatService;
 
 @Configuration
-@ConditionalOnProperty(prefix = "scrapper",name = "database-access-type",havingValue = "jpa")
+@ConditionalOnProperty(prefix = "scrapper", name = "database-access-type", havingValue = "jpa")
 @EnableJpaRepositories(basePackages = "ru.tinkoff.edu.java.scrapper.web.repository")
 @Import(ParserConfig.class)
-public class JpaAccessConfiguration
+public class JpaAccessConfiguration {
 
-{
-    @Bean
-    public LinkService linkService(JpaLinkRepository repository, Parser parser)
-    {
-        return new JpaLinkService(repository,parser);
-    }
+  @Bean
+  public LinkService linkService(JpaLinkRepository repository, Parser parser) {
+    return new JpaLinkService(repository, parser);
+  }
 
-    @Bean
-    public TgChatService tgChatService(JpaUserRepository repository)
-    {
-        return new JpaTgChatService(repository);
-    }
+  @Bean
+  public TgChatService tgChatService(JpaUserRepository repository) {
+    return new JpaTgChatService(repository);
+  }
 }

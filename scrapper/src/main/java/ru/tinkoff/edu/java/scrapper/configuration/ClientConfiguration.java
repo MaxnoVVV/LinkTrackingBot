@@ -12,23 +12,21 @@ import ru.tinkoff.edu.java.scrapper.web.service.notificator.SendUpdatesService;
 
 @Configuration
 public class ClientConfiguration {
-    @Bean
-    public GitHubWebClient gitHubWebClient()
-    {
-        return new GitHubWebClient();
-    }
 
-    @Bean
-    public StackOverFlowWebClient stackOverFlowWebClient()
-    {
-        return new StackOverFlowWebClient();
-    }
+  @Bean
+  public GitHubWebClient gitHubWebClient() {
+    return new GitHubWebClient();
+  }
 
-    @Bean
-    @ConditionalOnProperty(prefix = "scrapper",name="use-queue",havingValue = "false")
-    public SendUpdatesService sendUpdatesService(BotClient botClient)
-    {
-        return new HttpService(botClient);
-    }
+  @Bean
+  public StackOverFlowWebClient stackOverFlowWebClient() {
+    return new StackOverFlowWebClient();
+  }
+
+  @Bean
+  @ConditionalOnProperty(prefix = "scrapper", name = "use-queue", havingValue = "false")
+  public SendUpdatesService sendUpdatesService(BotClient botClient) {
+    return new HttpService(botClient);
+  }
 
 }
