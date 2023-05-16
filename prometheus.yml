@@ -1,0 +1,15 @@
+global:
+  scrape_interval:     15s
+
+
+  external_labels:
+    monitor: 'codelab-monitor'
+
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.internal:10000','host.docker.internal:10001','localhost:9090']
+
