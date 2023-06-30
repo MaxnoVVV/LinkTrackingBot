@@ -28,7 +28,6 @@ public class Bot implements AutoCloseable {
 
   private final TelegramBot bot;
   private final Counter counter;
-
   private final Command commandProcessor;
 
   public void addCommands() {
@@ -91,25 +90,23 @@ public class Bot implements AutoCloseable {
       log.info(String.format("Executing %d update command", update.updateId()));
       bot.execute(request);
     } else {
-      log.info(
+      bot.execute(
+          new SendMessage(update.message().chat().id(), "Сервис недоступен, попробуйте позднее"));
+      log.warn(
           String.format("Update %d command did not processed successfully", update.updateId()));
     }
   }
 
   public void processUpdate(Update update) {
 
-    log.info(String.format("Update %d processing", update.updateId()));
+    log.info(String.format("Got update %d, processing", update.updateId()));
 
     if (update.message() != null && update.message().entities() != null && Arrays.stream(
         update.message().entities()).anyMatch(entity -> {
       return entity.type() == MessageEntity.Type.bot_command;
     })) {
-      log.info(String.format("Update %d is command, processing", update.updateId()));
-
       processCommand(update);
-
-      log.info(String.format("Update %d command, processed", update.updateId()));
-
+      log.info(String.format("Update %d processed", update.updateId()));
     } else if (update.message() != null && update.message().replyToMessage() != null
         && update.message().replyToMessage().from().isBot()) {
       log.info(String.format("Update %d is link", update.updateId()));

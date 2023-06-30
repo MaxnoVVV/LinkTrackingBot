@@ -18,7 +18,6 @@ public class HelpCommand extends Command {
             log.info(String.format("Update %d with %s message is /help command", update.updateId(), update.message().text()));
             return new SuccessCommandResponse(message, false);
         } else {
-            log.info(String.format("Update %d with %s message is not /help command", update.updateId(), update.message().text()));
             return next(update);
         }
     }

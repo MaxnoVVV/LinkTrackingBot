@@ -25,56 +25,54 @@ public class ScrapperClient {
   private WebClient client;
 
   public ScrapperClient() {
-    log.info("client for scrapper with default url created");
     client = WebClient.builder()
-        .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(1000000))// property
+        .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(1000000))
         .build();
     baseurl = "http://localhost:8081";
+    log.info("client for scrapper with default url created");
   }
 
   public ScrapperClient(String url) {
-    log.info("client for scrapper with ### url created");
     client = WebClient.builder()
-        .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(1000000))// property
+        .codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(1000000))
         .build();
     baseurl = url;
+    log.info(String.format("client for scrapper with %s url created", url));
   }
 
   public ResponseEntity getLinks(long chatId) {
     log.info("client getLinks method executing");
-
-    var response = client.get().uri(baseurl + "/links").header("Tg-Chat-Id", Long.toString(chatId))
-        .retrieve().onStatus(status -> status.value() == 400, resp -> Mono.empty())
-        .toEntity(String.class).block();
-    if (response.getStatusCode().is4xxClientError()) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    } else {
-      try {
+    try {
+      var response = client.get().uri(baseurl + "/links")
+          .header("Tg-Chat-Id", Long.toString(chatId))
+          .retrieve().onStatus(status -> status.value() == 400, resp -> Mono.empty())
+          .toEntity(String.class).block();
+      if (response.getStatusCode().is4xxClientError()) {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      } else {
         return new ResponseEntity(
             mapper.readValue(response.getBody().toString(), ListLinksResponse.class),
             HttpStatus.OK);
-      } catch (Exception e) {
-        log.error(e.toString());
-        log.error(e.getMessage());
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
       }
+    } catch (Exception e) {
+      log.warn("Exception in getLinks client method");
+      log.error(e.toString());
+      log.error(e.getMessage());
+      return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
   }
 
   public ResponseEntity<?> addLink(long chatId, AddLinkRequest request) {
 
     log.info("client addLinks method executing");
-    ResponseEntity tempres = client.post().uri(baseurl + "/links")
-        .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-        .body(BodyInserters.fromObject(request)).header("Tg-Chat-Id", Long.toString(chatId))
-        .retrieve().onStatus(status -> status.is4xxClientError(), resp -> Mono.empty())
-        .toEntity(String.class).block();
-
-    log.info(tempres.getStatusCode().toString());
-    log.info(tempres.toString());
-    log.info(tempres.getBody().toString());
     try {
+      ResponseEntity tempres = client.post().uri(baseurl + "/links")
+          .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+          .body(BodyInserters.fromObject(request)).header("Tg-Chat-Id", Long.toString(chatId))
+          .retrieve().onStatus(status -> status.is4xxClientError(), resp -> Mono.empty())
+          .toEntity(String.class).block();
       if (tempres.getStatusCode().is4xxClientError()) {
         return new ResponseEntity<>(
             mapper.readValue(tempres.getBody().toString(), ApiErrorResponse.class),
@@ -83,22 +81,19 @@ public class ScrapperClient {
         return new ResponseEntity(
             mapper.readValue(tempres.getBody().toString(), LinkResponse.class), HttpStatus.OK);
       }
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
   }
 
   public ResponseEntity<?> deleteLink(long chatId, RemoveLinkRequest request) {
     log.info("client deleteLinks method executing");
-    ResponseEntity result = client.method(HttpMethod.DELETE).uri(baseurl + "/links")
-        .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-        .body(BodyInserters.fromObject(request)).header("Tg-Chat-Id", Long.toString(chatId))
-        .retrieve().onStatus(status -> status.value() == 400, resp -> Mono.empty())
-        .toEntity(String.class).block();
-
     try {
+      ResponseEntity result = client.method(HttpMethod.DELETE).uri(baseurl + "/links")
+          .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+          .body(BodyInserters.fromObject(request)).header("Tg-Chat-Id", Long.toString(chatId))
+          .retrieve().onStatus(status -> status.value() == 400, resp -> Mono.empty())
+          .toEntity(String.class).block();
       if (result.getStatusCode().is4xxClientError()) {
         return new ResponseEntity<>(
             mapper.readValue(result.getBody().toString(), ApiErrorResponse.class),
@@ -108,12 +103,8 @@ public class ScrapperClient {
             mapper.readValue(result.getBody().toString(), LinkResponse.class), HttpStatus.OK);
       }
     } catch (Exception e) {
-      log.error(e.toString());
-      log.error(e.getMessage());
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
   }
 
   public ResponseEntity<?> registerChat(long ChatId) {
