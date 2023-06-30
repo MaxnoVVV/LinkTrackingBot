@@ -9,9 +9,9 @@ import ru.tinkoff.edu.java.StackOverFlowParser;
 
 @Configuration
 public class ParserConfig {
-    @Bean
-    public Parser parser()
-    {
-        return Parser.link(new BaseParser(),new GitHubParser(),new StackOverFlowParser());
-    }
+
+  @Bean
+  public Parser parser() {
+    return Parser.link(new BaseParser(), new GitHubParser(), new StackOverFlowParser());
+  }
 }
