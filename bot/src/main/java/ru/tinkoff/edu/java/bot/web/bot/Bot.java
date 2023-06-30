@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
+import io.micrometer.core.instrument.Counter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Import;
@@ -26,7 +27,7 @@ import java.util.List;
 public class Bot implements AutoCloseable {
 
   private final TelegramBot bot;
-
+  private final Counter counter;
 
   private final Command commandProcessor;
 
@@ -75,6 +76,7 @@ public class Bot implements AutoCloseable {
   }
 
   private void processCommand(Update update) {
+    counter.increment();
     CommandResponse result = commandProcessor.proccess(update);
     if (result == null) {
       log.info(String.format("Unknown command for %d", update.updateId()));

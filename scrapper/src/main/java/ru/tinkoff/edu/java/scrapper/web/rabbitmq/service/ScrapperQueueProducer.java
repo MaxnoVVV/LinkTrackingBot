@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.configuration.ApplicationConfig;
 import ru.tinkoff.edu.java.scrapper.web.dto.forclient.dto.LinkUpdateRequest;
 
-@Service
+
 @RequiredArgsConstructor
 public class ScrapperQueueProducer {
 

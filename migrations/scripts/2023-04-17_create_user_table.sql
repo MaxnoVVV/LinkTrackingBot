@@ -3,7 +3,8 @@
 --changeset m.nov:create_user_table
 
 
-CREATE TABLE user(
+CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    Id INT
+    Id INT,
+    UNIQUE(Id)
 );

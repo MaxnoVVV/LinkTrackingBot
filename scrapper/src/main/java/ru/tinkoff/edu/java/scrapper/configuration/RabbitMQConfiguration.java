@@ -18,7 +18,11 @@ import ru.tinkoff.edu.java.scrapper.web.service.notificator.SendUpdatesService;
 @ConditionalOnProperty(prefix = "scrapper", name = "use-queue", havingValue = "true")
 public class RabbitMQConfiguration {
 
-
+@Bean
+public ScrapperQueueProducer scrapperQueueProducer(RabbitTemplate rabbitTemplate,ApplicationConfig config)
+{
+  return new ScrapperQueueProducer(rabbitTemplate,config.rabbitmq().exchange().name(),config.rabbitmq().binding().routingKey());
+}
   @Bean
   public String routingKey(ApplicationConfig config) {
     return config.rabbitmq().binding().routingKey();
